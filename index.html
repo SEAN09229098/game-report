@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>好色教主正式服玩家分析摘要（2026-11-09）</title>
+<style>
+:root{--bg:#fff;--paper:#fafafa;--text:#1a1a1a;--text2:#555;--text3:#888;--border:#e3e3e3;--c0:#2f6fed;--c0l:#c9d9fb;--c1:#e0a100;--c2:#18a8b8;--gray:#b5b5b5;--danger:#c62828;--warn:#b26a00;--dangerbg:#fdecea;--warnbg:#fff4e0;--infobg:#eef3fd}
+@media (prefers-color-scheme:dark){:root{--bg:#141414;--paper:#1c1c1c;--text:#ececec;--text2:#b5b5b5;--text3:#8a8a8a;--border:#333;--c0:#5b8ff9;--c0l:#2c3f66;--gray:#666;--danger:#ef6b6b;--warn:#f0b04a;--dangerbg:#3a1f1f;--warnbg:#3a2e17;--infobg:#1d2a40}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"PingFang TC","Noto Sans TC","Microsoft JhengHei",sans-serif;line-height:1.6;font-size:15px}
+.wrap{max-width:1100px;margin:0 auto;padding:32px 20px 64px}
+h1{font-size:26px;margin:0 0 10px;line-height:1.3}
+h2{font-size:20px;margin:44px 0 14px;padding-top:8px}
+h3{font-size:16px;margin:0 0 12px}
+.summary{color:var(--text2);margin:0 0 20px}
+.toc{border:1px solid var(--border);border-radius:12px;padding:14px 18px;background:var(--paper)}
+.toc ol{margin:6px 0 0;padding-left:22px;columns:2;column-gap:32px}
+.toc a{color:var(--text);text-decoration:none}.toc a:hover{text-decoration:underline}
+.card{border:1px solid var(--border);border-radius:16px;padding:20px;background:var(--bg);margin:12px 0}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+@media (max-width:760px){.grid2{grid-template-columns:1fr}.toc ol{columns:1}h1{font-size:22px}.wrap{padding:20px 14px 48px}}
+.note{color:var(--text2);font-size:14px;margin:8px 0}
+.seg{display:flex;flex-wrap:wrap;gap:6px;margin:8px 0 12px}
+.seg button{border:1px solid var(--border);background:var(--paper);color:var(--text);border-radius:999px;padding:6px 14px;font:inherit;font-size:14px;cursor:pointer}
+.seg button.on{background:var(--text);color:var(--bg);border-color:var(--text)}
+.seg .cnt{opacity:.6;margin-left:4px}
+.find{border:1px solid var(--border);border-radius:12px;padding:14px 16px;margin:10px 0;display:flex;gap:12px}
+.badge{flex:none;font-size:13px;font-weight:600;border-radius:6px;padding:2px 10px;height:fit-content;white-space:nowrap}
+.b-high{background:var(--dangerbg);color:var(--danger)}.b-mid{background:var(--warnbg);color:var(--warn)}.b-tip{background:var(--paper);color:var(--text2);border:1px solid var(--border)}
+.find .t{font-weight:600;margin-bottom:4px}.find .e{color:var(--text2);font-size:14px}.find .a{font-size:14px;margin-top:6px}.find .o{font-size:13px;color:var(--text3);margin-top:6px}
+.tbl{overflow-x:auto}
+table{border-collapse:collapse;width:100%;font-size:14px}
+th,td{padding:8px 10px;border-bottom:1px solid var(--border);text-align:right;white-space:nowrap}
+th{color:var(--text2);font-weight:500}
+th:first-child,td:first-child{text-align:left;white-space:normal}
+.neg{color:var(--danger);font-weight:600}.wrn{color:var(--warn);font-weight:600}
+.legend{display:flex;flex-wrap:wrap;gap:14px;font-size:13px;color:var(--text2);margin-bottom:8px}
+.legend i{display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:6px;vertical-align:-1px}
+svg{display:block;width:100%;height:auto}
+svg text{fill:var(--text3);font-size:12px;font-family:inherit}
+svg .lbl{fill:var(--text);font-size:13px}
+.hb{display:grid;grid-template-columns:minmax(90px,38%) 1fr auto;gap:6px 10px;align-items:center;font-size:14px}
+.hb .track{height:8px;border-radius:4px;background:transparent}
+.hb .bar{height:8px;border-radius:4px}
+.hb .v{color:var(--text2);text-align:right;white-space:nowrap}
+#stageChart{grid-template-columns:52px 1fr minmax(118px,auto)}
+.callout{background:var(--infobg);border-radius:12px;padding:14px 16px;font-size:14px}
+ul{padding-left:20px}li{margin:4px 0}
+.kpis{display:grid;grid-template-columns:repeat(4,minmax(140px,1fr));gap:12px;margin:10px 0 24px}
+@media (max-width:1000px){.kpis{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media (max-width:720px){.kpis{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.kc{border:1px solid var(--border);border-radius:10px;padding:14px 14px 12px;background:var(--bg);box-shadow:0 1px 2px rgba(0,0,0,.04)}
+.kc .kl{font-size:13px;color:var(--text2)}
+.kc .kv{font-size:26px;line-height:1.25;margin:6px 0 8px;font-family:Georgia,"Noto Serif TC","PMingLiU",serif;color:var(--text)}
+.kc .kv.bad{color:var(--danger)}
+.kc .kd{font-size:12.5px;color:var(--text3);line-height:1.5}
+.kc .kd b{color:var(--text2);font-weight:600}
+.kcap{font-size:13px;color:var(--text2);margin:4px 0 0}
+.foot{color:var(--text3);font-size:13px;margin-top:40px;border-top:1px solid var(--border);padding-top:12px}
+.props{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin:12px 0}
+@media (max-width:760px){.props{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.props .p{border:1px solid var(--border);border-radius:10px;padding:10px 12px;background:var(--bg)}
+.props .pl{font-size:13px;color:var(--text2)}
+.props .pv{font-size:20px;margin-top:4px;font-variant-numeric:tabular-nums}
+#tutChart svg text.lbl{fill:var(--text);font-size:11px}
+
+.heat{border-collapse:separate;border-spacing:3px;font-size:12px;width:100%}
+.heat th,.heat td{border:0;padding:6px 4px;text-align:center;min-width:52px;border-radius:4px}
+.heat th{color:var(--text2);font-weight:500}
+.heat th:first-child,.heat td:first-child{text-align:left;white-space:nowrap;min-width:160px;color:var(--text2);background:transparent}
+.heat td{font-variant-numeric:tabular-nums}
+
+</style>
+</head>
+<body>
+<div class="wrap">
+<h1>好色教主正式服玩家分析摘要（2026-11-09）</h1>
+<p class="summary">資料截至 <b>2026-11-09 14:23（台灣時間）</b>，涵蓋 <b>S1～S4</b> 四個伺服器與 <b>H365、JsGame、PlayHorny</b> 三個渠道，已排除 <b>21 個 GM／測試帳號</b>。重點：玩家流失集中在前期，第 1 章第 9 關與第 2 關是最大流失點，營收高度集中在一位玩家。</p>
+
+<section id="top-kpi" aria-label="核心指標">
+<div class="seg" id="kpiSeg"></div>
+<p class="kcap" id="kpiLead"></p>
+<div class="kpis" id="kpiCards"></div>
+</section>
+
+<nav class="toc"><b>目錄</b><ol>
+<li><a href="#top-kpi">核心指標</a></li><li><a href="#findings">重點結論</a></li><li><a href="#kpi">核心指標對照表</a></li><li><a href="#daily">每日新增與活躍</a></li><li><a href="#daily-rev">每日營收</a></li><li><a href="#daily-tbl">每日明細</a></li><li><a href="#retention">留存</a></li><li><a href="#stages">玩家停在哪一關</a></li><li><a href="#tutorial">新手教學各組完成率</a></li><li><a href="#compare">各渠道與伺服器</a></li><li><a href="#revenue">營收集中度</a></li><li><a href="#diamond">鑽石經濟</a></li><li><a href="#diamond-seg">各伺服器、渠道的取得與消耗</a></li><li><a href="#conn">連線結束原因</a></li><li><a href="#terms">名詞與計算方式</a></li><li><a href="#limits">資料限制</a></li>
+</ol></nav>
+
+<h2 id="findings">重點結論</h2>
+<div class="seg" id="ownerSeg"></div>
+<div id="findList"></div>
+<p class="note">用上方按鈕只看某個團隊負責的項目。高＝影響最大、建議優先處理；中＝明顯問題；提醒＝需要持續觀察的趨勢。</p>
+
+<h2 id="kpi">核心指標對照表</h2>
+<div class="card tbl"><table id="kpiTbl"></table></div>
+<p class="note">10/30 舊報告欄是上一版報告的數字（資料截至 2026-10-30 13:09），不等於 10/23–10/30 期間欄。兩個期間欄的計算方式相同：留存、48 小時沒上線、只上線一次、第一次遊玩、停在 1-9、沒有進入主線，只看該段期間新註冊的玩家（10/23–10/30 為 2,150 人；10/31–11/09 為 1,098 人）；營收、付費人數、付費玩家最近 24 小時上線、神鑽，看該段期間內所有玩家的訂單與流水；註冊 24 小時內首付只看該段新玩家中有付費的人（32 人、6 人）；異地登入踢線看該段開始的連線。付費率與 ARPU 以該段有上線的玩家為分母。停在哪一關、是否進入主線是這些玩家現在的狀態。「－」表示這一欄不適用。</p>
+
+<h2 id="daily">每日新增與活躍</h2>
+<div class="card"><div class="legend"><span><i style="background:var(--c0)"></i>當天新增</span><span><i style="background:var(--c1)"></i>老玩家</span></div><div id="dailyChart"></div></div>
+<p class="note">整根高度＝當天活躍玩家。新增從 10/24 高點一路下滑，S3（10/29）、S4（11/05）開服只帶來小幅回升。* 11/09 只到下午 2 點多。</p>
+<h3 id="daily-rev">每日營收（USD，依發獎時間）</h3>
+<div class="card"><div id="revChart"></div></div>
+<p class="note">依訂單發獎時間計算。* 11/09 只到下午 2 點多。</p>
+<h3 id="daily-tbl">每日明細</h3>
+<div class="seg" id="sortSeg"></div>
+<div class="card tbl"><table id="dayTbl"></table></div>
+
+<h2 id="retention">留存</h2>
+<div class="seg" id="retMode"></div>
+<div class="card" id="retBox"></div>
+<p class="note">第 N 天留存是註冊後第 N 天有上線的比例，只計完整的日子，空白是還沒滿 N 天。顏色越深越好。</p>
+<h3 id="ret-combined">各伺服器、渠道的合併留存</h3>
+<div class="seg" id="retSegMode"></div>
+<div class="card" id="retSegBox"></div>
+
+<h2 id="stages">玩家停在哪一關</h2>
+<div class="seg" id="stageSeg"></div>
+<div class="card"><div class="legend"><span><i style="background:var(--c0)"></i>重點關卡</span><span><i style="background:var(--c0l)"></i>其他關卡</span></div><div id="stageChart" class="hb"></div></div>
+<p class="note" id="stageNote"></p>
+<h3 id="tutorial">新手教學各組完成率</h3>
+<div class="card"><div id="tutChart"></div></div>
+<p class="note">第 1 組是開場劇情，有 16.4% 的玩家沒完成。降幅最大的是第 14 組到第 15 組（2-1 觸發），掉了 9.2 pt。</p>
+
+<h2 id="compare">各渠道與伺服器</h2>
+<div class="seg" id="cmpSeg"></div>
+<div class="card tbl"><table id="cmpTbl"></table></div>
+<p class="note">H365 營收最高，主要來自一位玩家；扣掉這位玩家後，H365 的 ARPU 和其他渠道差不多。</p>
+
+<h2 id="revenue">營收集中度</h2>
+<div class="grid2">
+<div class="card"><h3>累計營收 $2,282.86</h3><div id="revPie"></div></div>
+<div class="card"><h3>付費最多的 5 位玩家</h3><div id="revTop" class="hb"></div></div>
+</div>
+
+<h2 id="diamond">鑽石經濟</h2>
+<div class="seg" id="diaSeg"></div>
+<div class="props" id="diaProp"></div>
+<div class="grid2">
+<div class="card"><h3 id="diaGetH">取得來源</h3><div id="diaGet" class="hb"></div></div>
+<div class="card"><h3 id="diaUseH">消耗用途</h3><div id="diaUse" class="hb"></div></div>
+</div>
+<h3 id="diamond-seg">各伺服器、渠道的取得與消耗</h3>
+<div class="card tbl"><table id="diaSegTbl"></table></div>
+
+<h2 id="conn">連線結束原因</h2>
+<div class="grid2">
+<div class="card"><h3>共 12,766 次連線</h3><div id="connPie"></div></div>
+<div class="card tbl"><table id="connTbl"></table></div>
+</div>
+
+<h2 id="terms">名詞與計算方式</h2>
+<ul>
+<li>玩家：每個伺服器上的一個角色算一位玩家，不含 GM／測試帳號。</li>
+<li>活躍：當天有開始連線遊戲。</li>
+<li>流失／48 小時沒上線：最近 48 小時完全沒有連線；只計算註冊超過 48 小時的玩家。</li>
+<li>第 N 天留存：註冊後第 N 天有上線的比例，只算已經過完的日子。</li>
+<li>遊玩時間：每次連線從進入到登出（含斷線後約 3 分鐘的保留時間），單次最多算 12 小時。</li>
+<li>營收：只算已經發放獎勵、非測試、未退款的訂單，換算成美元：H365 100 Hcoin、JsGame 人民幣 7 元、PlayHorny 100 HCoins 各等於 1 美元。</li>
+<li>付費率＝付費人數 ÷ 玩家數；ARPU＝營收 ÷ 玩家數。</li>
+<li>停在哪一關：玩家目前所在、還沒通過的主線關卡。</li>
+<li>神鑽使用率＝神鑽消耗量 ÷ 神鑽取得量。</li>
+</ul>
+
+<h2 id="limits">資料限制</h2>
+<div class="callout">神鑽來源與用途的名稱沿用 10/30 版的對照，其中「H365 購買發獎」與少數新代碼是推測。新手教學只有組別與步驟編號，沒有提示文字可對照。關卡與教學進度只有現在的狀態，無法回推 10/30 當時的分布，所以這兩項的 10/30 數字取自上一版報告。</div>
+
+<p class="foot">好色教主正式服玩家分析摘要 · 資料截至 2026-11-09 14:23（台灣時間）</p>
+</div>
+
+<script>
+(function(){
+"use strict";
+var FINDINGS=[
+{sev:"高",title:"第 1 章第 9 關仍是最大流失點",ev:"327 位流失玩家停在 1-9（10/30 為 214 人）。他們的聖徒都夠（中位數 102,920，這關只要 800），戰力也接近已過關的玩家，不是數值卡關。",act:"從頭實機走第 8～10 關與第 9、10 組新手教學，確認引導是否讓玩家找不到下一步（第 10 關是劇情關）。",owners:["企劃","QA"]},
+{sev:"高",title:"新出現的流失點：第 1 章第 2 關",ev:"181 位流失玩家停在 1-2，其中 152 人戰力為 0，只有 52 人完成第 3 組新手教學（1-1 觸發）。其他流失高點（1-21、1-25、2-1）也都緊接在教學觸發關之後。",act:"檢查第 3 組教學中斷後能否接續，以及上陣引導是否確實完成。",owners:["企劃","client"]},
+{sev:"高",title:"前期留存偏低",ev:"次日留存 21.7%、第 3 天 8.5%、第 7 天 5.0%、第 14 天 2.9%。48.6% 的玩家只上線過一次，第一次遊玩中位數 18.1 分鐘；H365 次日留存最低（19.1%）。",act:"優先處理前期流失：開場、第 1 章流程、第一天的目標感。",owners:["企劃"]},
+{sev:"中",title:"18% 玩家沒有進入主線",ev:"584 人沒有主線進度，其中 521 人已流失；427 人停在開場劇情的第一步。登入後連不上遊戲只占連線的 1.0%，主要不是連線問題。",act:"檢查開場劇情長度、能否跳過，以及低階裝置上的載入表現。",owners:["企劃","client"]},
+{sev:"中",title:"被異地登入踢下線的比例偏高",ev:"15.3% 的連線以「被異地登入踢下線」結束，影響 810 人，約占全部玩家四分之一（10/30 為 494 人）。",act:"確認切回 App 或重連時是否重複登入，以及玩家是否看到異地登入提示。",owners:["client"]},
+{sev:"中",title:"營收集中在一位玩家，付費玩家也在流失",ev:"付費率 1.3%（42 人）。S1 H365 一位玩家累計 $1,500.50，占總營收 65.7%。付費玩家最近 24 小時有上線的只剩 38.1%（10/30 為 46.9%）。",act:"規劃第 3～7 天的付費點與付費玩家的留存內容，並追蹤高付費玩家的上線狀況。",owners:["企劃"]},
+{sev:"中",title:"付費鑽石（神鑽）幾乎沒被花掉",ev:"神鑽取得 526,114，只花掉 14,502（2.8%），玩家身上存量 511,612。",act:"檢查神鑽的消耗管道與前期曝光，否則再儲值動機會變弱。",owners:["企劃"]},
+{sev:"提醒",title:"新增持續下滑，新服帶動有限",ev:"每日新增從 10/24 的 403 人降到 11/04 的 85 人；S3、S4 開服後只小幅回升（最高 192、119 人）。舊服每日活躍剩 S1 16～30 人、S2 18～33 人。",act:"確認導量與開新服的節奏；企劃同步評估舊服合服時機。",owners:["行銷","企劃"]}];
+var KPI=[["玩家數","2,075","3,248","+1,173","新增 2,150（上線 2,150）","新增 1,098（上線 1,376）"],["次日留存","22.6%","21.7%","−0.9 pt","22.7%","19.3%|neg"],["第 3 天留存","8.2%","8.5%","+0.3 pt","9.1%","6.8%|neg"],["第 7 天留存","－","5.0%","－","5.0%","5.1%"],["48 小時沒上線（註冊超過 48 小時的人中）","88.0%","94.0%","+6.0 pt|neg","96.7%（2,150 人中）","87.6%（896 人中）"],["只上線過一次","49.7%","48.6%","−1.1 pt","46.8%","52.3%"],["第一次遊玩時間（中位數）","19.2 分","18.1 分","−1.1 分","18.6 分","17.5 分"],["營收","$1,492.93","$2,282.86","+$789.93","$1,577.43","$705.43"],["付費人數","32","42","+10","32","17"],["付費率","1.5%","1.3%","−0.2 pt","1.5%（÷ 期間上線玩家）","1.2%（÷ 期間上線玩家）"],["每位玩家平均營收（ARPU）","$0.72","$0.70","−$0.02","$0.73（÷ 期間上線玩家）","$0.51（÷ 期間上線玩家）"],["每位付費玩家平均","$46.65","$54.35","+$7.70","$49.29","$41.50"],["期間新玩家的付費","－","－","－","32 人、$1,577.43（1.5%）","6 人、$62.00（0.5%）"],["最大單一付費玩家占營收","－","65.7%","－","67.0%","62.9%"],["註冊 24 小時內首次付費","87.5%","78.6%","−8.9 pt","87.5%（28／32 位新付費玩家）","83.3%（5／6 位新付費玩家）"],["付費玩家最近 24 小時有上線","46.9%","38.1%","−8.8 pt|neg","28.1%（9／32）","76.5%（13／17）"],["神鑽使用率","2.6%","2.8%","+0.2 pt","2.5%（8,849 ÷ 349,659）","3.2%（5,653 ÷ 176,455）"],["停在 1-9 的流失玩家","214","327","+113","255（2,079 位流失新玩家中）","72（785 位流失新玩家中）"],["沒有進入主線","331","584","+253","326（新玩家的 15.2%）","258（新玩家的 23.5%）"],["被異地登入踢下線（影響人數）","494","810","+316","522 人（1,201 次，占期間連線 17.1%）","341 人（757 次，占期間連線 13.2%）"]];
+var KSETS={cum:{lead:"累計：所有玩家（10/23 開服至 2026-11-09 14:23），已排除 21 個 GM／測試角色。同一位玩家可以在兩段期間都付費：10/23–10/30 有 32 人、10/31–11/09 有 17 人，其中 7 人兩段都有付費，所以 32＋17＝49、大於累計 42 人。",cards:[["玩家數","3,248","已排除 <b>21</b> 個 GM／測試角色",0],["平均次日留存","21.7%","第 3 天 <b>8.5%</b>",1],["48 小時沒上線","94.0%","註冊超過 48 小時的 <b>3,046</b> 人中",1],["只上線過一次","48.6%","第一次遊玩中位數 <b>18.1</b> 分鐘",0],["累計營收","$2,282.86","付費率 <b>1.3%</b>（42 人）",0],["付費人數","42","每位付費玩家 <b>$54.35</b>",0],["神鑽使用率","2.8%","付費鑽石取得後幾乎沒被花掉",1]]},
+early:{lead:"10/23–10/30 期間：玩家類指標只看這段期間新註冊的 2,150 人；營收與神鑽看這段期間內所有玩家的訂單與流水。這不等於 10/30 舊報告（當時截至 10/30 13:09）。同一位玩家可以在兩段期間都付費（與 10/31–11/09 重疊 7 人，32＋17＝49、大於累計 42 人）。",cards:[["期間新增玩家","2,150","期間有上線的玩家共 <b>2,150</b> 人",0],["平均次日留存","22.7%","第 3 天 <b>9.1%</b>（新玩家）",1],["48 小時沒上線","96.7%","新玩家中註冊超過 48 小時的 <b>2,150</b> 人中",1],["只上線過一次","46.8%","第一次遊玩中位數 <b>18.6</b> 分鐘",0],["期間營收","$1,577.43","付費率 <b>1.5%</b>（32 人／期間上線 2,150 人）",0],["付費人數","32","每位付費玩家 <b>$49.29</b>（皆為期間新玩家）",0],["神鑽使用率","2.5%","期間取得 <b>349,659</b>、消耗 <b>8,849</b>",1]]},
+period:{lead:"10/31–11/09 期間：玩家類指標只看這段期間新註冊的 1,098 人；營收與神鑽看這段期間內所有玩家的訂單與流水。同一位玩家可以在兩段期間都付費（與 10/23–10/30 重疊 7 人，32＋17＝49、大於累計 42 人）。",cards:[["期間新增玩家","1,098","期間有上線的玩家共 <b>1,376</b> 人",0],["平均次日留存","19.3%","第 3 天 <b>6.8%</b>（新玩家）",1],["48 小時沒上線","87.6%","新玩家中註冊超過 48 小時的 <b>896</b> 人中",1],["只上線過一次","52.3%","第一次遊玩中位數 <b>17.5</b> 分鐘",0],["期間營收","$705.43","付費率 <b>1.2%</b>（17 人／期間上線 1,376 人）",0],["付費人數","17","每位付費玩家 <b>$41.50</b>，其中新玩家 <b>6</b> 人",0],["神鑽使用率","3.2%","期間取得 <b>176,455</b>、消耗 <b>5,653</b>",1]]}};
+var DAILY=[["10-23",364,364,0,91.29,8],["10-24",403,488,85,308.29,5],["10-25",385,535,150,421.43,7],["10-26",290,446,156,122.0,6],["10-27",240,402,162,58.29,6],["10-28",168,343,175,40.0,4],["10-29",141,288,147,189.64,8],["10-30",159,317,158,346.5,7],["10-31",192,367,175,67.5,2],["11-01",158,329,171,81.5,5],["11-02",100,245,145,53.93,3],["11-03",103,235,132,42.5,2],["11-04",85,216,131,37.5,1],["11-05",92,233,141,104.0,7],["11-06",98,229,131,148.0,5],["11-07",119,265,146,74.5,3],["11-08",92,221,129,60.5,3],["11-09",59,149,90,35.5,2]];
+var RET=[["10-23",364,23.4,12.6,8.8,4.7,5.5,3.6],["10-24",403,25.8,10.4,8.4,4.0,5.7,3.2],["10-25",385,21.3,11.7,7.5,4.9,3.9,1.8],["10-26",290,20.3,14.1,7.9,5.5,5.5,null],["10-27",240,22.5,15.0,8.8,4.2,3.3,null],["10-28",168,20.2,13.1,12.5,8.3,4.8,null],["10-29",141,27.0,17.7,12.8,7.1,7.1,null],["10-30",159,20.8,15.7,10.7,6.3,5.0,null],["10-31",192,17.7,6.8,5.2,4.7,5.2,null],["11-01",158,15.2,7.6,5.1,8.2,5.1,null],["11-02",100,15.0,13.0,3.0,1.0,null,null],["11-03",103,23.3,14.6,8.7,null,null,null],["11-04",85,29.4,17.6,10.6,null,null,null],["11-05",92,21.7,19.6,12.0,null,null,null],["11-06",98,17.3,13.3,null,null,null,null],["11-07",119,20.2,null,null,null,null,null],["11-08",92,null,null,null,null,null,null],["11-09",59,null,null,null,null,null,null]];
+var RETC=["第 1 天","第 2 天","第 3 天","第 6 天","第 7 天","第 14 天"];
+var RET_SEG={"全部":{"1":21.7,"2":12.8,"3":8.5,"6":5.2,"7":5.0,"14":2.9},"S1":{"1":23.5,"2":11.4,"3":8.5,"6":4.4,"7":5.2,"14":3.1},"S2":{"1":21.0,"2":13.7,"3":8.7,"6":5.5,"7":4.3,"14":1.7},"S3":{"1":21.3,"2":12.8,"3":8.1,"6":5.9,"7":5.9},"S4":{"1":19.1,"2":16.2,"3":12.0},"H365":{"1":19.1,"2":11.6,"3":7.4,"6":5.1,"7":4.4,"14":2.9},"JsGame":{"1":23.6,"2":12.2,"3":8.3,"6":4.2,"7":4.8,"14":2.0},"PlayHorny":{"1":24.5,"2":16.9,"3":11.5,"6":7.5,"7":7.1,"14":5.9}};
+var STAGES={cum:{denom:2864,rows:[["1-9",327,1],["1-2",181,1],["3-1",150,0],["2-1",132,0],["1-21",117,0],["2-2",91,0],["1-25",66,0],["5-1",43,0],["1-3",42,0],["1-11",36,0]],note:"累計：所有已 48 小時沒上線的玩家（2,864 人，其中 2,343 人有主線進度、521 人沒進主線）目前停在哪一關，列出人數最多的 10 關。括號內占比的分母是 2,864 人（含沒進主線的人）。位置是玩家現在的狀態。1-9 和 1-2 兩關的玩家資源都足夠，比較像引導或流程問題，而不是打不過。"},early:{denom:2079,rows:[["1-9",255,1],["1-2",124,1],["3-1",97,0],["1-21",91,0],["2-1",90,0],["2-2",72,0],["1-25",53,0],["5-1",33,0],["1-3",29,0],["1-11",27,0]],note:"10/23–10/30 期間：這段期間註冊、現在已 48 小時沒上線的 2,079 人（其中 1,754 人有主線進度、325 人沒進主線）目前停在哪一關，列出人數最多的 10 關。括號內占比的分母是 2,079 人（含沒進主線的人）。位置是 11/09 資料截止時的狀態，不是 10/30 當時的位置。"},period:{denom:785,rows:[["1-9",72,1],["1-2",57,1],["3-1",53,0],["2-1",42,0],["1-21",26,0],["2-2",19,0],["1-3",13,0],["1-25",13,0],["1-18",10,0],["5-1",10,0]],note:"10/31–11/09 期間：這段期間新註冊、現在已 48 小時沒上線的 785 人（其中 589 人有主線進度、196 人沒進主線）目前停在哪一關，列出人數最多的 10 關。括號內占比的分母是 785 人（含沒進主線的人）。位置是玩家現在的狀態。排名和累計幾乎一樣，沒有新的流失高點。"}};
+var CH=[["渠道","玩家數","次日留存","48h 沒上線","付費人數","付費率","營收","ARPU"],["H365","1,535","19.1%|wrn","93.1%","14","0.9%","$1,803.00","$1.17"],["JsGame","1,090","23.6%","96.1%","15","1.4%","$198.86","$0.18"],["PlayHorny","623","24.5%","92.3%","13","2.1%","$281.00","$0.45"]];
+var SV=[["伺服器","開服時間","玩家數","次日留存","48h 沒上線","付費人數","營收","ARPU"],["S1","10/23 10:00","975","23.5%","97.3%","19","$1,751.57","$1.80"],["S2","10/25 12:00","952","21.0%","97.0%","9","$244.29","$0.26"],["S3","10/29 11:02","903","21.3%","92.0%","11","$241.00","$0.27"],["S4（新）","11/05 10:30","418","19.1%","74.5%","3","$46.00","$0.11"]];
+var TOP=[["第 1 名（S1 H365）",1500.5,"$1,500.50"],["第 2 名（S2 H365）",155,"$155.00"],["第 3 名（S3 PlayHorny）",108,"$108.00"],["第 4 名（S3 PlayHorny）",78,"$78.00"],["第 5 名（S2 JsGame）",39.29,"$39.29"]];
+var TUT=[[1,83.6],[2,82.0],[3,75.7],[4,76.0],[5,75.6],[6,75.1],[7,74.7],[8,74.1],[9,71.7],[10,69.5],[11,62.0],[12,57.4],[13,56.8],[14,52.7],[15,43.5],[16,35.6]];
+var DIA={"神鑽":{get:526114,use:14502,stock:511612,getRows:[["福袋開啟獎勵",173114,6],["H365 平台購買發獎（推測）",145900,14],["JsGame 平台 IAP 購買發獎",107500,11],["PlayHorny 平台 IAP 購買發獎",80800,13],["靈契高級資格獎勵",12500,5],["月卡購買獎勵",6300,21]],useRows:[["常規道具商店購買消耗",8416,7],["淫蛋巢位解鎖消耗",5258,7],["圖書館解鎖消耗",508,2],["家人告解消耗",295,3],["靈寵配對消耗",25,1]]},"晶鑽":{get:4674884,use:2161933,stock:2512951,getRows:[["信箱領取獎勵",1474714,1618],["成就任務獎勵",816100,1146],["七日任務獎勵",535270,2158],["主線任務獎勵",377400,2525],["儲值獎勵",292820,41],["福袋開啟獎勵",223300,1268],["主線事件獎勵",195030,1661],["靈契任務獎勵",126480,1863],["每日登入獎勵",119950,2294],["玩家初始道具",97440,3248],["限時征討戰鬥獎勵",84810,683],["新手教學獎勵",79290,2643],["神殿PVP排行榜獎勵",72250,24],["排行榜膜拜",68460,899],["靈視獎勵",52880,1149],["兌換碼獎勵",27100,105],["常規活動排行榜獎勵",16754,503],["月卡每日獎勵",9500,18],["靈契高級資格獎勵",5000,2],["靈寵配對退還",336,3]],useRows:[["常規道具商店購買消耗",1332739,836],["家人告解消耗",418205,2488],["淫蛋巢位解鎖消耗",222442,257],["圖書館解鎖消耗",145092,212],["靈寵配對消耗",24495,191],["靈寵推薦配對刷新消耗水晶",18920,73],["代碼未對照（推測為靈寵配對相關）",40,1]]}};
+var DIA_SEG={"S1":{"神鑽-取得":374710,"神鑽-消耗":6554,"晶鑽-取得":1351169,"晶鑽-消耗":720966},"S2":{"神鑽-取得":67904,"神鑽-消耗":5224,"晶鑽-取得":1211326,"晶鑽-消耗":645466},"S3":{"神鑽-取得":71400,"神鑽-消耗":2305,"晶鑽-取得":1432300,"晶鑽-消耗":581440},"S4":{"神鑽-取得":12100,"神鑽-消耗":419,"晶鑽-取得":680089,"晶鑽-消耗":214061},"H365":{"神鑽-取得":326806,"神鑽-消耗":6687,"晶鑽-取得":1929606,"晶鑽-消耗":853828},"JsGame":{"神鑽-取得":116408,"神鑽-消耗":5205,"晶鑽-取得":1589072,"晶鑽-消耗":759815},"PlayHorny":{"神鑽-取得":82900,"神鑽-消耗":2610,"晶鑽-取得":1156206,"晶鑽-消耗":548290}};
+var CONN=[["斷線逾時（正常離開）",10657,"83.5%","3,203"],["被異地登入踢下線",1958,"15.3%","810"],["登入後未連上遊戲",131,"1.0%","83"],["伺服器重啟",12,"0.1%","11"],["資料截止時仍在線",8,"0.1%","8"]];
+var NS="http://www.w3.org/2000/svg";
+function $(id){return document.getElementById(id);}
+function esc(s){return String(s).replace(/[&<>"]/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c];});}
+function fmt(n){return Number(n).toLocaleString("en-US");}
+function usd(n){return "$"+Number(n).toLocaleString("en-US",{minimumFractionDigits:2,maximumFractionDigits:2});}
+function seg(el,opts,val,cb){el.innerHTML="";opts.forEach(function(o){var b=document.createElement("button");b.type="button";b.className=o.v===val?"on":"";b.innerHTML=esc(o.l)+(o.c!==undefined?'<span class="cnt">'+o.c+"</span>":"");b.onclick=function(){seg(el,opts,o.v,cb);cb(o.v);};el.appendChild(b);});}
+function table(el,rows){var h="<thead><tr>"+rows[0].map(function(c){return"<th>"+esc(c)+"</th>";}).join("")+"</tr></thead><tbody>";rows.slice(1).forEach(function(r){h+="<tr>"+r.map(function(c){var p=String(c).split("|");return'<td'+(p[1]?' class="'+p[1]+'"':"")+">"+esc(p[0])+"</td>";}).join("")+"</tr>";});el.innerHTML=h+"</tbody>";}
+function hbars(el,items,max){var h="";items.forEach(function(it){var w=Math.max(1,it.v/max*100);h+='<div>'+esc(it.l)+'</div><div class="track"><div class="bar" style="width:'+w+'%;background:'+(it.hi?"var(--c0)":"var(--c0l)")+'"></div></div><div class="v">'+esc(it.d)+"</div>";});el.innerHTML=h;}
+function pie(el,parts,cols){var tot=parts.reduce(function(a,p){return a+p[1];},0),a0=-Math.PI/2,svg='<svg viewBox="0 0 160 160" style="max-width:180px;margin:0 auto 12px">';parts.forEach(function(p,i){var a1=a0+p[1]/tot*2*Math.PI;if(p[1]/tot>0.9999){svg+='<circle cx="80" cy="80" r="70" fill="'+cols[i]+'"/>';}else{var lg=(a1-a0)>Math.PI?1:0;svg+='<path d="M80 80 L'+(80+70*Math.cos(a0))+" "+(80+70*Math.sin(a0))+" A70 70 0 "+lg+" 1 "+(80+70*Math.cos(a1))+" "+(80+70*Math.sin(a1))+' Z" fill="'+cols[i]+'"/>';}a0=a1;});svg+='<circle cx="80" cy="80" r="42" fill="var(--bg)"/></svg>';var lg2='<div class="legend" style="flex-direction:column;gap:6px">';parts.forEach(function(p,i){lg2+='<span><i style="background:'+cols[i]+'"></i>'+esc(p[0])+"：<b>"+esc(p[2])+"</b>（"+(p[1]/tot*100).toFixed(1)+"%）</span>";});el.innerHTML=svg+lg2+"</div>";}
+
+// findings
+function renderFind(o){var h="";FINDINGS.filter(function(f){return o==="全部"||f.owners.indexOf(o)>=0;}).forEach(function(f){var cls=f.sev==="高"?"b-high":f.sev==="中"?"b-mid":"b-tip";h+='<div class="find"><span class="badge '+cls+'">'+f.sev+'</span><div><div class="t">'+esc(f.title)+'</div><div class="e">'+esc(f.ev)+'</div><div class="a"><b>建議：</b>'+esc(f.act)+'</div><div class="o">負責：'+esc(f.owners.join("／"))+"</div></div></div>";});$("findList").innerHTML=h;}
+var owners=["全部","企劃","QA","client","行銷"].map(function(o){return{v:o,l:o,c:o==="全部"?FINDINGS.length:FINDINGS.filter(function(f){return f.owners.indexOf(o)>=0;}).length};});
+seg($("ownerSeg"),owners,"全部",renderFind);renderFind("全部");
+// kpi
+table($("kpiTbl"),[["指標","10/30 舊報告","11/09 累計","變化","10/23–10/30 期間","10/31–11/09 期間"]].concat(KPI));
+function renderKpi(k){var set=KSETS[k];$("kpiLead").textContent=set.lead;$("kpiCards").innerHTML=set.cards.map(function(c){return'<div class="kc"><div class="kl">'+esc(c[0])+'</div><div class="kv'+(c[3]?" bad":"")+'">'+esc(c[1])+'</div><div class="kd">'+c[2]+"</div></div>";}).join("");}
+seg($("kpiSeg"),[{v:"cum",l:"累計（至 11/09）"},{v:"early",l:"10/23–10/30 期間"},{v:"period",l:"10/31–11/09 期間"}],"cum",renderKpi);renderKpi("cum");
+// daily stacked columns + revenue + detail
+var sortKey="date";
+function lab(i){return DAILY[i][0]+(i===DAILY.length-1?"*":"");}
+function drawDailyCharts(){
+  var W=1000,H=300,L=44,B=40,T=12,n=DAILY.length,max=600,cw=(W-L-10)/n,s='<svg viewBox="0 0 '+W+" "+H+'" role="img" aria-label="每日新增與活躍">';
+  [0,200,400,600].forEach(function(t){var y=T+(H-T-B)*(1-t/max);s+='<line x1="'+L+'" x2="'+W+'" y1="'+y+'" y2="'+y+'" stroke="var(--border)"/><text x="'+(L-6)+'" y="'+(y+4)+'" text-anchor="end">'+t+"</text>";});
+  DAILY.forEach(function(d,i){var x=L+i*cw+cw*0.18,w=cw*0.64,h1=(H-T-B)*d[1]/max,h2=(H-T-B)*d[3]/max,y0=H-B;
+    s+='<rect x="'+x+'" y="'+(y0-h1)+'" width="'+w+'" height="'+h1+'" fill="var(--c0)"><title>'+lab(i)+" 新增 "+d[1]+"</title></rect>";
+    s+='<rect x="'+x+'" y="'+(y0-h1-h2)+'" width="'+w+'" height="'+h2+'" fill="var(--c1)"><title>'+lab(i)+" 老玩家 "+d[3]+"，活躍 "+d[2]+"</title></rect>";
+    if(i%3===0||i===n-1)s+='<text x="'+(x+w/2)+'" y="'+(H-B+18)+'" text-anchor="middle">'+lab(i)+"</text>";});
+  $("dailyChart").innerHTML=s+"</svg>";
+  var rmax=Math.max.apply(null,DAILY.map(function(r){return r[4];}))||1,s2='<svg viewBox="0 0 '+W+' 220" role="img" aria-label="每日營收">';
+  DAILY.forEach(function(r,i){var x=L+i*cw+cw*0.18,w=cw*0.64,h=160*r[4]/rmax;
+    s2+='<rect x="'+x+'" y="'+(180-h)+'" width="'+w+'" height="'+h+'" fill="var(--c0)"><title>'+lab(i)+" "+usd(r[4])+"</title></rect>";
+    s2+='<text x="'+(x+w/2)+'" y="198" text-anchor="middle">'+(i%3===0||i===n-1?lab(i):"")+"</text>";});
+  $("revChart").innerHTML=s2+"</svg>";
+}
+function drawDayTbl(){
+  var rows=DAILY.slice(), idx={new:1,active:2,returning:3,revenue:4,payers:5};
+  if(sortKey!=="date") rows.sort(function(a,b){return b[idx[sortKey]]-a[idx[sortKey]];});
+  table($("dayTbl"),[["日期","新增","活躍玩家","老玩家","營收 (USD)","付費人數"]].concat(rows.map(function(r,i){
+    var star=r[0]==="11-09"?"*":"";
+    return ["2026-"+r[0]+star,fmt(r[1]),fmt(r[2]),fmt(r[3]),usd(r[4]),String(r[5])];
+  })));
+}
+drawDailyCharts();
+seg($("sortSeg"),[{v:"date",l:"依日期"},{v:"new",l:"新增由多到少"},{v:"active",l:"活躍由多到少"},{v:"returning",l:"老玩家由多到少"},{v:"revenue",l:"營收由多到少"},{v:"payers",l:"付費人數由多到少"}],"date",function(v){sortKey=v;drawDayTbl();});
+drawDayTbl();
+// retention heatmap / table
+function heatColor(v){if(v==null)return "transparent";var t=Math.min(1,Math.max(0,v/30));var dark=window.matchMedia&&window.matchMedia("(prefers-color-scheme: dark)").matches;var r,g,b;if(dark){r=Math.round(27+t*64);g=Math.round(40+t*103);b=Math.round(56+t*193);}else{r=Math.round(232+t*(47-232));g=Math.round(241+t*(111-241));b=Math.round(255+t*(237-255));}return "rgb("+r+","+g+","+b+")";}
+function heatText(v){if(v==null)return "inherit";var t=v/30;var dark=window.matchMedia&&window.matchMedia("(prefers-color-scheme: dark)").matches;if(!dark)return t>0.62?"#fff":"#16325c";return t<0.35?"#c5d4f0":"#0b1424";}
+function renderRet(mode){
+  if(mode==="heat"){var h='<table class="heat"><thead><tr><th>註冊日</th>'+RETC.map(function(c){return"<th>"+c+"</th>";}).join("")+"</tr></thead><tbody>";
+    RET.forEach(function(r){h+="<tr><td>2026-"+r[0]+"（"+r[1]+" 人）</td>";r.slice(2).forEach(function(v){h+='<td style="background:'+heatColor(v)+';color:'+heatText(v)+'">'+(v==null?"":v.toFixed(1)+"%")+"</td>";});h+="</tr>";});
+    $("retBox").innerHTML=h+"</tbody></table>";}
+  else {$("retBox").innerHTML="<table></table>";table($("retBox").querySelector("table"),[["註冊日","人數"].concat(RETC)].concat(RET.map(function(r){return ["2026-"+r[0],String(r[1])].concat(r.slice(2).map(function(v){return v==null?"":v.toFixed(1)+"%";}));})));}
+}
+seg($("retMode"),[{v:"heat",l:"熱力圖"},{v:"table",l:"數值表"}],"heat",renderRet);renderRet("heat");
+function renderRetSeg(mode){
+  var keys=Object.keys(RET_SEG), days=["1","2","3","6","7","14"];
+  if(mode==="heat"){var h='<table class="heat"><thead><tr><th>範圍</th>'+RETC.map(function(c){return"<th>"+c+"</th>";}).join("")+"</tr></thead><tbody>";
+    keys.forEach(function(k){h+="<tr><td>"+esc(k)+"</td>";days.forEach(function(d){var v=RET_SEG[k][d];h+='<td style="background:'+heatColor(v===undefined?null:v)+';color:'+heatText(v===undefined?null:v)+'">'+(v===undefined?"":v.toFixed(1)+"%")+"</td>";});h+="</tr>";});
+    $("retSegBox").innerHTML=h+"</tbody></table>";}
+  else {$("retSegBox").innerHTML="<table></table>";table($("retSegBox").querySelector("table"),[["範圍"].concat(RETC)].concat(keys.map(function(k){return [k].concat(days.map(function(d){return RET_SEG[k][d]===undefined?"":RET_SEG[k][d].toFixed(1)+"%";}));})));}
+}
+seg($("retSegMode"),[{v:"heat",l:"熱力圖"},{v:"table",l:"數值表"}],"heat",renderRetSeg);renderRetSeg("heat");
+// stages
+function renderStage(k){var st=STAGES[k];hbars($("stageChart"),st.rows.map(function(s){return{l:s[0],v:s[1],d:fmt(s[1])+" 人（"+(s[1]/st.denom*100).toFixed(1)+"%）",hi:!!s[2]};}),st.rows[0][1]);$("stageNote").textContent=st.note;}
+seg($("stageSeg"),[{v:"cum",l:"累計（至 11/09）"},{v:"period",l:"10/31–11/09 期間"},{v:"early",l:"10/23–10/30 期間"}],"cum",renderStage);renderStage("cum");
+// compare
+function renderCmp(v){table($("cmpTbl"),v==="channel"?CH:SV);}
+seg($("cmpSeg"),[{v:"channel",l:"依渠道"},{v:"server",l:"依伺服器"}],"channel",renderCmp);renderCmp("channel");
+// revenue
+pie($("revPie"),[["S1 H365 一位玩家",1500.5,"$1,500.50"],["其他 41 位付費玩家",782.36,"$782.36"]],["var(--c0)","var(--c1)"]);
+hbars($("revTop"),TOP.map(function(t,i){return{l:t[0],v:t[1],d:t[2],hi:i===0};}),1500.5);
+// tutorial
+(function(){var W=1000,H=240,s='<svg viewBox="0 0 '+W+" "+H+'" role="img" aria-label="新手教學各組完成率">';TUT.forEach(function(r,i){var x=30+i*60,h=r[1]/100*170;s+='<rect x="'+x+'" y="'+(190-h)+'" width="36" height="'+h+'" fill="'+(i===14?"var(--c0)":"var(--c0l)")+'"><title>第 '+r[0]+" 組 "+r[1].toFixed(1)+"%</title></rect>";s+='<text class="lbl" x="'+(x+18)+'" y="'+(186-h)+'" text-anchor="middle">'+r[1].toFixed(0)+'%</text><text x="'+(x+18)+'" y="210" text-anchor="middle">'+r[0]+"</text>";});$("tutChart").innerHTML=s+"</svg>";})();
+// diamonds
+function renderDia(k){
+  var d=DIA[k];
+  $("diaProp").innerHTML=[["取得",fmt(d.get)],["消耗",fmt(d.use)],["使用率",(d.use/d.get*100).toFixed(1)+"%"],["目前存量（玩家身上合計）",fmt(d.stock)]].map(function(x){return '<div class="p"><div class="pl">'+esc(x[0])+'</div><div class="pv">'+esc(x[1])+"</div></div>";}).join("");
+  $("diaGetH").textContent="取得來源："+fmt(d.get);
+  $("diaUseH").textContent="消耗用途："+fmt(d.use);
+  hbars($("diaGet"),d.getRows.map(function(r,i){return{l:r[0],v:r[1],d:fmt(r[1])+"（"+r[2]+" 人）",hi:i===0};}),d.getRows[0][1]);
+  hbars($("diaUse"),d.useRows.map(function(r,i){return{l:r[0],v:r[1],d:fmt(r[1])+"（"+r[2]+" 人）",hi:i===0};}),d.useRows[0][1]);
+  table($("diaSegTbl"),[["範圍","取得","消耗","使用率"]].concat(Object.keys(DIA_SEG).map(function(name){var g=DIA_SEG[name][k+"-取得"],u=DIA_SEG[name][k+"-消耗"];return [name,fmt(g),fmt(u),(u/g*100).toFixed(1)+"%"];})));
+}
+seg($("diaSeg"),[{v:"神鑽",l:"神鑽（付費）"},{v:"晶鑽",l:"晶鑽（免費）"}],"神鑽",renderDia);renderDia("神鑽");
+// connections
+pie($("connPie"),[["斷線逾時（正常離開）",10657,"10,657 次"],["被異地登入踢下線",1958,"1,958 次"],["其他",151,"151 次"]],["var(--c0)","var(--c1)","var(--gray)"]);
+table($("connTbl"),[["結束原因","次數","占比","影響人數"]].concat(CONN.map(function(c,i){return[c[0]+(i===1?"|wrn":""),fmt(c[1]),c[2],c[3]];})));
+document.body.setAttribute("data-ok","1");
+})();
+</script>
+</body>
+</html>
