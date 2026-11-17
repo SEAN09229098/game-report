@@ -30,6 +30,9 @@ h3{font-size:16px;margin:0 0 12px}
 .b-high{background:var(--dangerbg);color:var(--danger)}.b-mid{background:var(--warnbg);color:var(--warn)}.b-tip{background:var(--paper);color:var(--text2);border:1px solid var(--border)}
 .find .t{font-weight:600;margin-bottom:4px}.find .e{color:var(--text2);font-size:14px}.find .a{font-size:14px;margin-top:6px}.find .o{font-size:13px;color:var(--text3);margin-top:6px}
 .tbl{overflow-x:auto}
+.tbl.sticky1{padding:12px 0}
+.tbl.sticky1 th:first-child,.tbl.sticky1 td:first-child{position:sticky;left:0;z-index:1;background:var(--bg);padding-left:20px;min-width:150px;box-shadow:1px 0 0 var(--border)}
+.tbl.sticky1 th:last-child,.tbl.sticky1 td:last-child{padding-right:20px}
 table{border-collapse:collapse;width:100%;font-size:14px}
 th,td{padding:8px 10px;border-bottom:1px solid var(--border);text-align:right;white-space:nowrap}
 th{color:var(--text2);font-weight:500}
@@ -100,7 +103,7 @@ ul{padding-left:20px}li{margin:4px 0}
 <p class="note">用上方按鈕只看某個團隊負責的項目。高＝影響最大、建議優先處理；中＝明顯問題；提醒＝需要持續觀察的趨勢。</p>
 
 <h2 id="kpi">核心指標對照表</h2>
-<div class="card tbl"><table id="kpiTbl"></table></div>
+<div class="card tbl sticky1"><table id="kpiTbl"></table></div>
 <p class="note">11/09 舊報告欄是上一版報告的累計數字（資料截至 2026-11-09 14:23）。三個期間欄的計算方式相同：留存、48 小時沒上線、只上線一次、第一次遊玩、停在 1-9、放棄率最高的卡關、沒有進入主線、玩到 1-2／1-9 的時間與到達率，只看該段期間新註冊的玩家（10/23–10/30 為 2,150 人；10/31–11/09 為 1,130 人；11/10–11/16 為 479 人）；營收、付費人數、付費玩家最近 24 小時上線、神鑽，看該段期間內所有玩家的訂單與流水；註冊 24 小時內首付只看該段新玩家中有付費的人（32 人、6 人、1 人）；異地登入踢線看該段開始的連線。付費率與 ARPU 以該段有上線的玩家為分母。停在哪一關、是否進入主線是這些玩家現在的狀態。10/31–11/09 欄現在包含 11/09 全天（上一版只到 14:23），而且流失、留存與付費玩家上線都依 11/17 的狀態重算，所以和上一版的期間欄略有不同。11/10–11/16 有 117 位新玩家註冊未滿 48 小時，48 小時沒上線只算其餘 362 人，這一欄的流失率因此偏低。「－」表示這一欄不適用。</p>
 
 <h2 id="daily">每日新增與活躍</h2>
