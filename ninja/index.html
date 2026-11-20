@@ -1,0 +1,3475 @@
+<!DOCTYPE html>
+<html lang="zh-Hant" translate="no">
+<head>
+  <meta charset="UTF-8">
+  <meta name="google" content="notranslate">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+  <meta name="theme-color" content="#2eb6d0">
+  <meta name="description" content="忍者護公主：把忍者擲進彈道，擋下鬼族的箭、子彈與火球。">
+  <title>忍者護公主</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect fill='%2324c6d8' width='64' height='64' rx='14'/%3E%3Ccircle cx='32' cy='28' r='14' fill='%23fff' stroke='%2312323c' stroke-width='3'/%3E%3Ccircle cx='27' cy='28' r='3' fill='%2312323c'/%3E%3Ccircle cx='37' cy='28' r='3' fill='%2312323c'/%3E%3C/svg%3E">
+  <style>
+:root {
+  --ink: #1b2430;
+  --teal: #24c6d8;
+  --teal-deep: #12879a;
+  --paper: #fff;
+  --sans: "WenQuanYi Micro Hei", "PingFang TC", "Noto Sans CJK TC", "Microsoft JhengHei", Inter, "Noto Sans", sans-serif;
+  --display: Inter, "Liberation Sans", "Noto Sans", sans-serif;
+  color-scheme: light;
+}
+
+* { box-sizing: border-box; }
+
+html, body {
+  margin: 0;
+  height: 100%;
+  background: #0e6e82;
+  color: var(--ink);
+  font-family: var(--sans);
+  overflow: hidden;
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+body {
+  min-height: 100%;
+  min-height: 100dvh;
+}
+
+button, input { font-family: inherit; }
+
+#frame {
+  position: relative;
+  width: min(480px, 100vw);
+  height: 100vh;
+  height: 100dvh;
+  margin: 0 auto;
+  overflow: hidden;
+  background: #7ee7f4;
+  box-shadow: 0 0 0 3px #12323c, 0 18px 50px rgba(0, 0, 0, 0.28);
+}
+
+#cv {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+  touch-action: none;
+}
+
+.screen {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  display: flex;
+  flex-direction: column;
+  padding: calc(12px + env(safe-area-inset-top)) 16px calc(16px + env(safe-area-inset-bottom));
+  pointer-events: none;
+}
+
+.screen.hidden { display: none; }
+.screen > * { pointer-events: auto; }
+
+#screen-title { justify-content: space-between; }
+
+.title-block {
+  text-align: center;
+  padding-top: 8px;
+  pointer-events: none;
+}
+
+.eyebrow {
+  display: inline-block;
+  margin: 0 0 6px;
+  padding: 3px 10px;
+  border-radius: 999px;
+  background: #fff;
+  border: 2px solid var(--ink);
+  letter-spacing: 0.28em;
+  font-size: 12px;
+  font-weight: 800;
+  color: var(--teal-deep);
+}
+
+.title-block h1 {
+  margin: 0;
+  font-size: clamp(36px, 10vw, 52px);
+  line-height: 1.05;
+  letter-spacing: 0.06em;
+  color: #fff;
+  -webkit-text-stroke: 7px #14586a;
+  paint-order: stroke fill;
+  text-shadow: 0 5px 0 #0c4a56;
+}
+
+.title-controls {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 22px;
+  padding-bottom: calc(8px + env(safe-area-inset-bottom));
+}
+
+.title-mute {
+  position: absolute;
+  top: calc(12px + env(safe-area-inset-top));
+  left: 12px;
+}
+
+button {
+  appearance: none;
+  border: 0;
+  cursor: pointer;
+  background: transparent;
+  color: inherit;
+  padding: 0;
+}
+
+button:active { transform: translateY(1px); }
+button:disabled { cursor: default; filter: grayscale(0.35); }
+
+.hex {
+  width: 62px;
+  height: 70px;
+  display: grid;
+  place-items: center;
+  color: #fff;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 72'%3E%3Cpolygon points='32,3 61,19 61,53 32,69 3,53 3,19' fill='%2324c6d8' stroke='%2312323c' stroke-width='4' stroke-linejoin='round'/%3E%3C/svg%3E") center / 100% 100% no-repeat;
+  filter: drop-shadow(0 3px 0 #0c5c6a);
+}
+
+.hex .off { display: none; }
+.hex[aria-pressed="true"] .on { display: none; }
+.hex[aria-pressed="true"] .off { display: block; }
+
+.play-orb {
+  width: 118px;
+  height: 118px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  background: radial-gradient(circle at 32% 28%, #c6ff86, #3dcc3a 42%, #16941f 72%);
+  border: 4px solid var(--ink);
+  box-shadow: 0 6px 0 #0e6a16;
+}
+
+.play-orb svg { margin-left: 6px; }
+
+.wallet {
+  position: absolute;
+  top: calc(14px + env(safe-area-inset-top));
+  right: 12px;
+  z-index: 5;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  min-width: 92px;
+  background: #fff;
+  border: 3px solid var(--ink);
+  border-radius: 999px;
+  padding: 3px 4px 3px 8px;
+  font-family: var(--display);
+  font-weight: 800;
+  font-size: 16px;
+  color: var(--ink);
+  box-shadow: 0 3px 0 var(--ink);
+}
+
+.wallet.hidden { display: none; }
+
+.coin-ico {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  flex: none;
+  background: radial-gradient(circle at 35% 32%, #ffe7a0, #f0a31a 62%, #c47a10);
+  border: 2px solid var(--ink);
+  box-shadow: inset 0 0 0 2px rgba(255, 236, 180, 0.7);
+}
+
+.plus {
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background: var(--teal);
+  color: #fff;
+  border: 2px solid var(--ink);
+  font-size: 18px;
+  font-weight: 800;
+  line-height: 1;
+}
+
+.coin-pop {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  width: 176px;
+  margin: 0;
+  padding: 8px 10px;
+  background: #fff;
+  border: 3px solid var(--ink);
+  border-radius: 12px;
+  font-size: 13px;
+  font-weight: 700;
+  line-height: 1.45;
+  text-align: left;
+  box-shadow: 0 3px 0 var(--ink);
+}
+
+.coin-pop.hidden { display: none; }
+
+#screen-how, #screen-select { justify-content: flex-start; }
+
+.panel {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  max-height: 100%;
+  padding: 16px 14px 12px;
+  background: rgba(255, 255, 255, 0.96);
+  border: 3px solid var(--ink);
+  border-radius: 18px;
+  box-shadow: 0 6px 0 rgba(18, 50, 60, 0.18);
+}
+
+.panel-head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.panel-head h2 {
+  margin: 0;
+  margin-right: auto;
+  font-size: 28px;
+  letter-spacing: 0.12em;
+}
+
+.text-btn, .ghost, .text-link {
+  background: #fff;
+  color: var(--ink);
+  border: 2px solid var(--ink);
+  border-radius: 999px;
+  padding: 6px 12px;
+  font-size: 14px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+}
+
+.ghost {
+  margin-top: 8px;
+  background: transparent;
+}
+
+.steps {
+  overflow: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  touch-action: pan-y;
+}
+
+.step h3 {
+  margin: 0 0 2px;
+  font-size: 16px;
+}
+
+.step p {
+  margin: 0;
+  color: #3d4c58;
+  font-size: 14px;
+  line-height: 1.55;
+}
+
+.select-meta {
+  margin: 0 0 10px;
+  color: #3d5560;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.level-grid {
+  overflow: auto;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+  padding-bottom: 8px;
+  min-height: 0;
+  touch-action: pan-y;
+}
+
+.card {
+  text-align: left;
+  border-radius: 12px;
+  padding: 8px;
+  background: #fff;
+  color: var(--ink);
+  border: 2px solid var(--ink);
+  box-shadow: 0 3px 0 var(--ink);
+  min-height: 86px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 2px;
+}
+
+.card .num {
+  font-family: var(--display);
+  font-size: 22px;
+  font-weight: 800;
+  color: var(--teal-deep);
+  line-height: 1;
+}
+
+.card .lname {
+  font-size: 13px;
+  font-weight: 800;
+  line-height: 1.3;
+}
+
+.card .stars {
+  margin-top: auto;
+  color: #d09020;
+  letter-spacing: 0.08em;
+  font-size: 12px;
+}
+
+.card.locked { opacity: 0.55; box-shadow: none; }
+.card.cleared { background: #e7fbff; }
+
+#hud, #dock {
+  position: absolute;
+  left: 0;
+  right: 0;
+  z-index: 4;
+  pointer-events: none;
+}
+
+#hud.hidden, #dock.hidden { display: none; }
+
+#hud {
+  top: 0;
+  height: 120px;
+  overflow: visible;
+}
+
+.hex-stack {
+  position: absolute;
+  top: calc(10px + env(safe-area-inset-top));
+  left: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  pointer-events: auto;
+  z-index: 2;
+}
+
+.level-num {
+  position: absolute;
+  top: calc(6px + env(safe-area-inset-top));
+  left: 0;
+  right: 0;
+  text-align: center;
+  font-family: var(--display);
+  font-weight: 800;
+  font-size: 76px;
+  line-height: 0.9;
+  color: #fff;
+  -webkit-text-stroke: 8px #12323c;
+  paint-order: stroke fill;
+  text-shadow: 0 4px 0 #0c4d5c;
+  z-index: 1;
+  pointer-events: none;
+}
+
+#dock {
+  bottom: 0;
+  padding: 8px 12px calc(10px + env(safe-area-inset-bottom));
+  text-align: center;
+}
+
+.hint-chip {
+  display: inline-block;
+  max-width: calc(100% - 8px);
+  margin: 0 auto 6px;
+  background: rgba(255, 255, 255, 0.94);
+  border: 2px solid var(--ink);
+  border-radius: 14px;
+  padding: 6px 10px;
+  font-size: 13px;
+  font-weight: 700;
+  line-height: 1.45;
+  color: var(--ink);
+}
+
+.dock-meta {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  font-size: 12px;
+  font-weight: 800;
+  color: #fff;
+  text-shadow: 0 1px 0 #12323c, 0 0 4px #12323c;
+}
+
+.dock-meta .text-link {
+  pointer-events: auto;
+  color: var(--ink);
+  text-shadow: none;
+  background: #fff;
+}
+
+#modal {
+  position: absolute;
+  inset: 0;
+  z-index: 6;
+}
+
+#modal.hidden { display: none; }
+
+#modal-win {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: calc(8px + env(safe-area-inset-top)) 12px calc(14px + env(safe-area-inset-bottom));
+  background: linear-gradient(180deg, #d6f7fb 0%, #fffaf2 42%, #fff6e8 100%);
+}
+
+#modal-win.hidden { display: none; }
+
+.win-home {
+  position: absolute;
+  top: calc(10px + env(safe-area-inset-top));
+  left: 10px;
+  z-index: 2;
+}
+
+.win-wallet { z-index: 2; }
+
+.victory-hero {
+  position: relative;
+  flex: 1;
+  width: 100%;
+  min-height: 220px;
+}
+
+#cheer {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.ribbon-wrap {
+  position: absolute;
+  left: 50%;
+  top: 31%;
+  width: min(250px, 70%);
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+}
+
+.ribbon-svg { width: 100%; height: auto; display: block; }
+
+.ribbon-text {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  color: #fff;
+  font-size: 30px;
+  font-weight: 900;
+  letter-spacing: 0.28em;
+  text-indent: 0.28em;
+  text-shadow: 0 2px 0 #8a1020;
+}
+
+.star-row {
+  display: flex;
+  justify-content: center;
+  gap: 6px;
+  min-height: 28px;
+  margin: 2px 0 6px;
+  font-size: 26px;
+  color: #d5dde2;
+}
+
+.star-row .on {
+  color: #ffb000;
+  -webkit-text-stroke: 1px var(--ink);
+  paint-order: stroke fill;
+  animation: pop 0.4s ease both;
+}
+
+.reward-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 12px;
+  background: #fff;
+  border: 3px solid var(--ink);
+  border-radius: 999px;
+  padding: 4px 16px 4px 6px;
+  font-family: var(--display);
+  font-weight: 800;
+  font-size: 26px;
+  color: #e07a12;
+  box-shadow: 0 3px 0 var(--ink);
+  animation: pop 0.45s ease both;
+}
+
+.claim {
+  width: min(100%, 320px);
+  margin-top: 4px;
+  background: linear-gradient(#ffb43a, #f07810);
+  color: #fff;
+  font-size: 28px;
+  font-weight: 900;
+  letter-spacing: 0.22em;
+  border-radius: 16px;
+  border: 4px solid var(--ink);
+  box-shadow: 0 5px 0 var(--ink);
+  padding: 12px 16px;
+  text-shadow: 0 2px 0 rgba(120, 50, 0, 0.35);
+}
+
+.claim.claimed { filter: saturate(0.65); }
+
+.next-link {
+  margin-top: 10px;
+  background: none;
+  color: var(--ink);
+  font-size: 18px;
+  font-weight: 800;
+  letter-spacing: 0.16em;
+  text-decoration: underline;
+  text-underline-offset: 4px;
+  padding: 6px;
+}
+
+.lose-card {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: min(100% - 36px, 340px);
+  padding: 22px 16px 14px;
+  text-align: center;
+  background: #fff;
+  border: 3px solid var(--ink);
+  border-radius: 18px;
+  box-shadow: 0 6px 0 var(--ink);
+}
+
+.lose-card.hidden { display: none; }
+
+.lose-card h2 {
+  margin: 0;
+  font-size: 32px;
+  letter-spacing: 0.14em;
+}
+
+.lose-card p {
+  margin: 8px 0 12px;
+  line-height: 1.55;
+  font-weight: 700;
+}
+
+@keyframes pop {
+  from { transform: scale(0.4); opacity: 0; }
+  to { transform: none; opacity: 1; }
+}
+
+@media (max-width: 380px) {
+  .level-num { font-size: 60px; -webkit-text-stroke-width: 6px; }
+  .play-orb { width: 100px; height: 100px; }
+  .hex { width: 54px; height: 62px; }
+  .title-block h1 { font-size: 34px; -webkit-text-stroke-width: 5px; }
+}
+
+@media (min-width: 900px) {
+  body {
+    background:
+      radial-gradient(circle at 50% 120%, rgba(255, 176, 64, 0.18), transparent 42%),
+      #0e6e82;
+  }
+}
+</style>
+</head>
+<body>
+  <div id="frame">
+    <canvas id="cv" aria-label="遊戲畫面"></canvas>
+
+    <div id="wallet" class="wallet">
+      <span class="coin-ico" aria-hidden="true"></span>
+      <span id="coin-total">0</span>
+      <button id="btn-coin-plus" class="plus" type="button" aria-label="金幣說明">+</button>
+      <p id="coin-pop" class="coin-pop hidden">金幣存在這台裝置。過關按領取就會加上。</p>
+    </div>
+
+    <section id="screen-title" class="screen">
+      <button id="btn-mute" class="hex mute-btn title-mute" type="button" aria-pressed="false" aria-label="關閉聲音">
+        <svg class="on" viewBox="0 0 24 24" width="26" height="26" aria-hidden="true"><path fill="#fff" d="M4 9h4l5-4v14l-5-4H4z"/><path d="M16 9a4 4 0 010 6" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round"/></svg>
+        <svg class="off" viewBox="0 0 24 24" width="26" height="26" aria-hidden="true"><path fill="#fff" d="M4 9h4l5-4v14l-5-4H4z"/><path d="M16 10l5 5M21 10l-5 5" stroke="#fff" stroke-width="2" stroke-linecap="round"/></svg>
+      </button>
+      <div class="title-block">
+        <p class="eyebrow">以身擋矢</p>
+        <h1>忍者護公主</h1>
+      </div>
+      <div class="title-controls">
+        <button id="btn-levels" class="hex" type="button" aria-label="選擇關卡">
+          <svg viewBox="0 0 24 24" width="26" height="26" aria-hidden="true"><path fill="#fff" d="M4 4h6v6H4zM14 4h6v6h-6zM4 14h6v6H4zM14 14h6v6h-6z"/></svg>
+        </button>
+        <button id="btn-start" class="play-orb" type="button" aria-label="開始守護">
+          <svg viewBox="0 0 24 24" width="54" height="54" aria-hidden="true"><path fill="#fff" d="M8 5l13 7-13 7z"/></svg>
+        </button>
+        <button id="btn-how" class="hex" type="button" aria-label="玩法說明">
+          <svg viewBox="0 0 24 24" width="26" height="26" aria-hidden="true"><circle cx="12" cy="12" r="9" fill="none" stroke="#fff" stroke-width="2.4"/><path d="M9.5 9a2.5 2.5 0 114 2c-.8.6-1.5 1-1.5 2" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round"/><circle cx="12" cy="17" r="1.1" fill="#fff"/></svg>
+        </button>
+      </div>
+    </section>
+
+    <section id="screen-how" class="screen hidden">
+      <div class="panel">
+        <div class="panel-head">
+          <h2>玩法</h2>
+          <button id="btn-how-back" class="text-btn" type="button">返回</button>
+        </div>
+        <div class="steps">
+          <article class="step">
+            <div>
+              <h3>紅線就是彈道</h3>
+              <p>鬼族的武器拉出一條紅線，直指公主。旁邊的圓牌數到零就出手。</p>
+            </div>
+          </article>
+          <article class="step">
+            <div>
+              <h3>拖曳擲出</h3>
+              <p>按住畫面向想去的方向拖。白點是拋物線。鬆手，忍者就飛出去。石壁和銅鏡會把他彈開。</p>
+            </div>
+          </article>
+          <article class="step">
+            <div>
+              <h3>三種守法</h3>
+              <p>擋住飛來的攻擊、在鬼出手前把他撞倒，或把公主推離紅線。推下城樓或推進尖刺就失敗。</p>
+            </div>
+          </article>
+          <article class="step">
+            <div>
+              <h3>星等和金幣</h3>
+              <p>飛過金幣並守住公主，就是三星。過關可以領取金幣，總數留在這台裝置上。</p>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section id="screen-select" class="screen hidden">
+      <div class="panel">
+        <div class="panel-head">
+          <h2>關卡</h2>
+          <button id="btn-mute-2" class="text-btn mute-btn" type="button">聲音</button>
+          <button id="btn-select-back" class="text-btn" type="button">返回</button>
+        </div>
+        <p id="select-meta" class="select-meta"></p>
+        <div id="level-grid" class="level-grid"></div>
+        <button id="btn-reset" class="ghost" type="button">清除進度</button>
+      </div>
+    </section>
+
+    <header id="hud" class="hidden">
+      <div class="hex-stack">
+        <button id="btn-retry" class="hex" type="button" aria-label="重試">
+          <svg viewBox="0 0 24 24" width="26" height="26" aria-hidden="true"><path d="M19 12a7 7 0 11-2-4.9" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round"/><path d="M19 4v5h-5" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <button id="btn-skip" class="hex" type="button" aria-label="跳過這關">
+          <svg viewBox="0 0 24 24" width="26" height="26" aria-hidden="true"><path fill="#fff" d="M4 6l8 6-8 6zM13 6l8 6-8 6z"/></svg>
+        </button>
+      </div>
+      <div id="level-num" class="level-num">1</div>
+    </header>
+
+    <footer id="dock" class="hidden">
+      <p id="hint" class="hint-chip"></p>
+      <div class="dock-meta">
+        <span id="hud-name"></span>
+        <span id="coin-count"></span>
+        <button id="btn-back" class="text-link" type="button">選關</button>
+        <button id="btn-mute-play" class="text-link mute-btn" type="button">聲音</button>
+      </div>
+    </footer>
+
+    <div id="modal" class="hidden" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+      <div id="modal-win" class="hidden">
+        <button id="btn-home" class="hex win-home" type="button" aria-label="回首頁">
+          <svg viewBox="0 0 24 24" width="26" height="26" aria-hidden="true"><path fill="#fff" d="M4 11l8-7 8 7v8a1 1 0 01-1 1h-5v-6H10v6H5a1 1 0 01-1-1z"/></svg>
+        </button>
+        <div class="wallet win-wallet">
+          <span class="coin-ico" aria-hidden="true"></span>
+          <span id="win-total">0</span>
+          <button id="btn-coin-plus-win" class="plus" type="button" aria-label="金幣說明">+</button>
+          <p id="coin-pop-win" class="coin-pop hidden">金幣存在這台裝置。過關按領取就會加上。</p>
+        </div>
+        <div class="victory-hero">
+          <canvas id="cheer" aria-hidden="true"></canvas>
+          <div class="ribbon-wrap">
+            <svg class="ribbon-svg" viewBox="0 0 280 68" aria-hidden="true">
+              <polygon points="18,8 262,8 274,34 262,60 18,60 6,34" fill="#d61f32" stroke="#7a101c" stroke-width="4" stroke-linejoin="round"/>
+              <polygon points="32,16 248,16 256,34 248,52 32,52 24,34" fill="none" stroke="#ffd56a" stroke-width="3"/>
+            </svg>
+            <div class="ribbon-text">勝利</div>
+          </div>
+        </div>
+        <div id="modal-stars" class="star-row" aria-hidden="true"></div>
+        <div id="reward-pill" class="reward-pill"><span class="coin-ico" aria-hidden="true"></span><span id="reward-amt">+80</span></div>
+        <button id="modal-claim" class="claim" type="button">領取</button>
+        <button id="modal-next" class="next-link" type="button">下一關</button>
+      </div>
+      <div id="modal-lose" class="lose-card hidden">
+        <h2 id="modal-title">沒擋住</h2>
+        <p id="modal-text"></p>
+        <button id="modal-retry" class="claim" type="button">再試一次</button>
+        <button id="modal-levels" class="next-link" type="button">回到關卡</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+/* Short Web Audio effects. No external files. */
+(function () {
+  "use strict";
+
+  var ctx = null;
+  var muted = false;
+
+  function ac() {
+    if (muted) return null;
+    var AC = window.AudioContext || window.webkitAudioContext;
+    if (!AC) return null;
+    if (!ctx) ctx = new AC();
+    if (ctx.state === "suspended") ctx.resume().catch(function () {});
+    return ctx;
+  }
+
+  function tone(freq, duration, type, peak, slide) {
+    var audio = ac();
+    if (!audio) return;
+    var o = audio.createOscillator();
+    var g = audio.createGain();
+    var t = audio.currentTime;
+    o.type = type || "sine";
+    o.frequency.setValueAtTime(freq, t);
+    if (slide) o.frequency.exponentialRampToValueAtTime(Math.max(40, slide), t + duration);
+    g.gain.setValueAtTime(0.0001, t);
+    g.gain.exponentialRampToValueAtTime(peak, t + 0.012);
+    g.gain.exponentialRampToValueAtTime(0.0001, t + duration);
+    o.connect(g);
+    g.connect(audio.destination);
+    o.start();
+    o.stop(t + duration + 0.02);
+  }
+
+  function noise(duration, peak, freq) {
+    var audio = ac();
+    if (!audio) return;
+    var n = Math.floor(audio.sampleRate * duration);
+    var buf = audio.createBuffer(1, Math.max(1, n), audio.sampleRate);
+    var data = buf.getChannelData(0);
+    for (var i = 0; i < data.length; i++) data[i] = Math.random() * 2 - 1;
+    var src = audio.createBufferSource();
+    src.buffer = buf;
+    var filter = audio.createBiquadFilter();
+    filter.type = "bandpass";
+    filter.frequency.value = freq || 900;
+    var g = audio.createGain();
+    var t = audio.currentTime;
+    g.gain.setValueAtTime(peak, t);
+    g.gain.exponentialRampToValueAtTime(0.0001, t + duration);
+    src.connect(filter);
+    filter.connect(g);
+    g.connect(audio.destination);
+    src.start();
+  }
+
+  window.NinjaAudio = {
+    unlock: function () { ac(); },
+    setMuted: function (v) {
+      muted = !!v;
+      if (ctx && muted && ctx.state === "running") ctx.suspend().catch(function () {});
+      if (ctx && !muted && ctx.state === "suspended") ctx.resume().catch(function () {});
+    },
+    ui: function () { tone(640, 0.06, "sine", 0.05); },
+    beep: function (n) { tone(520 + (n || 1) * 80, 0.09, "square", 0.04); },
+    throw: function () { noise(0.12, 0.08, 600); tone(280, 0.16, "sawtooth", 0.03, 90); },
+    fire: function (kind) {
+      if (kind === "fireball") noise(0.18, 0.1, 280);
+      else if (kind === "bullet") noise(0.08, 0.12, 1400);
+      else tone(660, 0.1, "triangle", 0.05, 220);
+    },
+    block: function () { noise(0.14, 0.16, 240); tone(110, 0.18, "sine", 0.08); },
+    coin: function () { tone(880, 0.07, "square", 0.04); setTimeout(function () { tone(1320, 0.09, "square", 0.03); }, 60); },
+    win: function () {
+      [523, 659, 784, 1046].forEach(function (f, i) {
+        setTimeout(function () { tone(f, 0.22, "triangle", 0.06); }, i * 120);
+      });
+    },
+    lose: function () { tone(330, 0.28, "triangle", 0.06, 140); },
+  };
+})();
+</script>
+<script>
+/* Hand-built guard stages. Coordinates are a 360×640 stage, y grows downward. */
+(function () {
+  "use strict";
+
+  var GROUND = 582;
+
+  function stand(x) {
+    return { x: x, y: GROUND };
+  }
+
+  var LEVELS = [
+    {
+      id: 1,
+      name: "初護",
+      hint: "按住拖曳出現拋物線，鬆手把忍者擲進紅線。",
+      ninja: stand(62),
+      princess: stand(188),
+      shots: [{ x: 302, y: 196, kind: "arrow", countdown: 3.2, speed: 420 }],
+      solids: [
+        { x: 250, y: 230, w: 110, h: 18, kind: "wood" },
+      ],
+      coins: [{ x: 146, y: 363 }, { x: 227, y: 331 }],
+    },
+    {
+      id: 2,
+      name: "對岸放箭",
+      hint: "鬼在左上方。往左上方擲，才擋得到那一箭。",
+      ninja: stand(292),
+      princess: stand(118),
+      shots: [{ x: 48, y: 168, kind: "arrow", countdown: 3.1, speed: 430 }],
+      solids: [{ x: 0, y: 206, w: 96, h: 16, kind: "wood" }],
+      coins: [{ x: 225, y: 348 }, { x: 173, y: 319 }],
+    },
+    {
+      id: 3,
+      name: "木架橫樑",
+      hint: "忍者站在木架上。從高處擲進彈道。",
+      ninja: { x: 78, y: 404 },
+      princess: stand(214),
+      shots: [{ x: 312, y: 150, kind: "bullet", countdown: 3, speed: 480 }],
+      solids: [{ x: 28, y: 422, w: 150, h: 16, kind: "wood" }],
+      coins: [{ x: 190, y: 300 }, { x: 230, y: 390 }],
+    },
+    {
+      id: 4,
+      name: "踏簧而起",
+      hint: "地面的踏簧會把忍者彈高。也可以直接擲高。",
+      ninja: stand(58),
+      princess: stand(236),
+      shots: [{ x: 300, y: 118, kind: "arrow", countdown: 3.3, speed: 400 }],
+      solids: [
+        { x: 132, y: 572, w: 54, h: 26, kind: "spring" },
+        { x: 118, y: 250, w: 28, h: 150, kind: "stone" },
+      ],
+      coins: [{ x: 212, y: 429 }, { x: 258, y: 371 }],
+    },
+    {
+      id: 5,
+      name: "雙鬼輪射",
+      hint: "兩隻鬼輪流出手。擋下第一發，忍者會回到原位。",
+      ninja: stand(64),
+      princess: stand(196),
+      shots: [
+        { x: 312, y: 176, kind: "arrow", countdown: 3, speed: 440 },
+        { x: 42, y: 188, kind: "fireball", countdown: 2.8, speed: 340 },
+      ],
+      solids: [
+        { x: 250, y: 214, w: 110, h: 16, kind: "wood" },
+        { x: 0, y: 226, w: 100, h: 16, kind: "wood" },
+      ],
+      coins: [{ x: 166, y: 351 }, { x: 67, y: 352 }],
+    },
+    {
+      id: 6,
+      name: "陣風",
+      hint: "青藍色的風會把人往上托。拋物線已經把風算進去了。",
+      ninja: stand(70),
+      princess: stand(200),
+      shots: [{ x: 308, y: 210, kind: "arrow", countdown: 3.2, speed: 400 }],
+      winds: [{ x: 120, y: 300, w: 140, h: 220, ax: 0, ay: -720 }],
+      solids: [{ x: 246, y: 246, w: 114, h: 16, kind: "wood" }],
+      coins: [{ x: 151, y: 296 }, { x: 203, y: 198 }],
+    },
+    {
+      id: 7,
+      name: "石壁反彈",
+      hint: "左右石壁會把忍者彈回去。可以利用反彈切入紅線。",
+      ninja: stand(64),
+      princess: stand(176),
+      shots: [{ x: 300, y: 150, kind: "bullet", countdown: 3.2, speed: 460 }],
+      solids: [
+        { x: 120, y: 430, w: 22, h: 90, kind: "stone" },
+        { x: 248, y: 188, w: 112, h: 16, kind: "wood" },
+      ],
+      coins: [{ x: 187, y: 322 }, { x: 264, y: 287 }],
+    },
+    {
+      id: 8,
+      name: "公主移動",
+      hint: "公主會左右挪步，紅線跟著轉。看準再擲。",
+      ninja: stand(58),
+      princess: { x: 188, y: GROUND, amp: 62, freq: 1.15 },
+      shots: [{ x: 308, y: 168, kind: "arrow", countdown: 3.4, speed: 400, track: true }],
+      solids: [{ x: 250, y: 206, w: 110, h: 16, kind: "wood" }],
+      coins: [{ x: 160, y: 548 }],
+    },
+    {
+      id: 9,
+      name: "火球較慢",
+      hint: "火球飛得慢，比較好攔，可是體積大。",
+      ninja: stand(250),
+      princess: stand(132),
+      shots: [{ x: 46, y: 140, kind: "fireball", countdown: 3, speed: 300 }],
+      solids: [{ x: 0, y: 176, w: 104, h: 16, kind: "wood" }],
+      coins: [{ x: 166, y: 413 }, { x: 119, y: 346 }, { x: 71, y: 320 }],
+    },
+    {
+      id: 10,
+      name: "穿金而過",
+      hint: "三枚金幣排在空中。全部帶回才是三星。",
+      ninja: stand(56),
+      princess: stand(210),
+      shots: [{ x: 316, y: 188, kind: "arrow", countdown: 3.4, speed: 390 }],
+      solids: [{ x: 256, y: 224, w: 104, h: 16, kind: "wood" }],
+      coins: [{ x: 67, y: 543 }, { x: 92, y: 542 }, { x: 117, y: 546 }],
+    },
+    {
+      id: 11,
+      name: "箱與簧",
+      hint: "先擋右鬼的彈，再擋左鬼的火球。踏簧可以借力。",
+      ninja: stand(250),
+      princess: stand(150),
+      shots: [
+        { x: 318, y: 150, kind: "bullet", countdown: 2.8, speed: 500 },
+        { x: 36, y: 164, kind: "fireball", countdown: 2.7, speed: 320 },
+      ],
+      solids: [
+        { x: 268, y: 186, w: 92, h: 16, kind: "wood" },
+        { x: 0, y: 200, w: 88, h: 16, kind: "wood" },
+        { x: 150, y: 470, w: 70, h: 22, kind: "crate" },
+        { x: 40, y: 572, w: 46, h: 26, kind: "spring" },
+      ],
+      coins: [{ x: 240, y: 340 }, { x: 100, y: 360 }],
+    },
+    {
+      id: 12,
+      name: "鏡壁折射",
+      hint: "銅鏡會把箭彈開。紅線轉彎之後，仍會打中公主。",
+      ninja: stand(48),
+      princess: { x: 145, y: 500 },
+      shots: [{ x: 168, y: 36, kind: "arrow", countdown: 3.3, speed: 420, aim: { x: 300, y: 250 } }],
+      solids: [
+        { x: 300, y: 168, w: 18, h: 210, kind: "mirror" },
+        { x: 100, y: 518, w: 100, h: 14, kind: "wood" },
+      ],
+      coins: [{ x: 210, y: 360 }, { x: 170, y: 430 }],
+    },
+    {
+      id: 13,
+      name: "風中移步",
+      hint: "公主在動，中間又有上升的風。",
+      ninja: stand(64),
+      princess: { x: 200, y: GROUND, amp: 48, freq: 1.3 },
+      shots: [{ x: 312, y: 196, kind: "fireball", countdown: 3.3, speed: 330, track: true }],
+      winds: [{ x: 130, y: 280, w: 120, h: 240, ax: 40, ay: -640 }],
+      solids: [{ x: 258, y: 232, w: 102, h: 16, kind: "wood" }],
+      coins: [{ x: 170, y: 360 }],
+    },
+    {
+      id: 14,
+      name: "連射",
+      hint: "三發連著來，一次比一次快。",
+      ninja: stand(64),
+      princess: stand(196),
+      shots: [
+        { x: 320, y: 150, kind: "arrow", countdown: 2.7, speed: 460 },
+        { x: 30, y: 170, kind: "bullet", countdown: 2.4, speed: 520 },
+        { x: 300, y: 250, kind: "fireball", countdown: 2.3, speed: 340 },
+      ],
+      solids: [
+        { x: 260, y: 186, w: 100, h: 16, kind: "wood" },
+        { x: 0, y: 206, w: 86, h: 16, kind: "wood" },
+        { x: 240, y: 286, w: 120, h: 16, kind: "wood" },
+      ],
+      coins: [{ x: 250, y: 380 }, { x: 100, y: 400 }, { x: 230, y: 460 }],
+    },
+    {
+      id: 15,
+      name: "天守總攻",
+      hint: "箭、彈、火球，還有一面會折射的銅鏡。",
+      ninja: stand(70),
+      princess: { x: 188, y: GROUND, amp: 36, freq: 1.05 },
+      shots: [
+        { x: 314, y: 168, kind: "arrow", countdown: 2.8, speed: 450, track: true },
+        { x: 40, y: 150, kind: "bullet", countdown: 2.4, speed: 520, track: true },
+        { x: 150, y: 48, kind: "fireball", countdown: 2.6, speed: 360, aim: { x: 312, y: 210 }, track: true },
+      ],
+      solids: [
+        { x: 258, y: 204, w: 102, h: 16, kind: "wood" },
+        { x: 0, y: 186, w: 96, h: 16, kind: "wood" },
+        { x: 312, y: 120, w: 16, h: 180, kind: "mirror" },
+        { x: 150, y: 572, w: 50, h: 26, kind: "spring" },
+      ],
+      winds: [{ x: 200, y: 340, w: 90, h: 160, ax: -30, ay: -420 }],
+      coins: [{ x: 230, y: 400 }, { x: 120, y: 360 }, { x: 200, y: 470 }],
+    },
+    {
+      id: 16,
+      name: "撞倒鬼",
+      hint: "新招：撞倒鬼族。尖刺守著紅線，跳上木台把鬼撞下去，這發箭就作廢。",
+      ninja: stand(54),
+      princess: stand(250),
+      shots: [{ x: 168, y: 286, kind: "arrow", countdown: 3, speed: 520 }],
+      solids: [
+        { x: 90, y: 318, w: 180, h: 14, kind: "wood" },
+        { x: 140, y: 348, w: 90, h: 250, kind: "thorn" },
+      ],
+      coins: [],
+    },
+    {
+      id: 17,
+      name: "推開公主",
+      hint: "新招：把公主推離紅線。推向右邊木台。左邊和底下是尖刺，掉下去就失敗。",
+      ninja: stand(48),
+      princess: { x: 176, y: 476 },
+      pit: true,
+      shots: [{ x: 176, y: 90, kind: "arrow", countdown: 3, speed: 340 }],
+      solids: [
+        { x: 0, y: 598, w: 110, h: 42, kind: "stone" },
+        { x: 146, y: 492, w: 64, h: 14, kind: "wood" },
+        { x: 250, y: 492, w: 90, h: 14, kind: "wood" },
+        { x: 110, y: 530, w: 250, h: 40, kind: "thorn" },
+        { x: 112, y: 430, w: 22, h: 70, kind: "thorn" },
+      ],
+      coins: [],
+    },
+    {
+      id: 18,
+      name: "木箱",
+      hint: "木箱推得動，撞得夠狠還會碎。別讓箱子擋死你的去路。",
+      ninja: stand(48),
+      princess: stand(230),
+      shots: [{ x: 310, y: 160, kind: "bullet", countdown: 3.3, speed: 460 }],
+      solids: [
+        { x: 250, y: 198, w: 110, h: 16, kind: "wood" },
+        { x: 120, y: 560, w: 42, h: 38, kind: "crate", loose: true },
+      ],
+      coins: [],
+    },
+    {
+      id: 19,
+      name: "竹籬",
+      hint: "竹籬擋得住身子，撞上去就會斷。箭仍會穿過去。",
+      ninja: stand(48),
+      princess: stand(220),
+      shots: [{ x: 312, y: 170, kind: "arrow", countdown: 3.2, speed: 420 }],
+      solids: [
+        { x: 256, y: 208, w: 104, h: 16, kind: "wood" },
+        { x: 130, y: 430, w: 16, h: 168, kind: "bamboo" },
+      ],
+      coins: [],
+    },
+    {
+      id: 20,
+      name: "活動台",
+      hint: "木台會左右移。看準落點，再擋下火球。",
+      ninja: { x: 70, y: 430 },
+      princess: stand(210),
+      shots: [{ x: 318, y: 150, kind: "fireball", countdown: 3.4, speed: 320 }],
+      solids: [
+        { x: 24, y: 448, w: 110, h: 14, kind: "mover", amp: 36, freq: 1.3, axis: "x" },
+        { x: 260, y: 188, w: 100, h: 16, kind: "wood" },
+      ],
+      coins: [],
+    },
+    {
+      id: 21,
+      name: "盾與燈",
+      hint: "鐵盾只擋箭，不擋人。燈籠被撞會掉下來。",
+      ninja: stand(56),
+      princess: stand(200),
+      shots: [{ x: 300, y: 140, kind: "arrow", countdown: 3.2, speed: 440 }],
+      solids: [
+        { x: 90, y: 360, w: 16, h: 90, kind: "shield" },
+        { x: 250, y: 176, w: 110, h: 16, kind: "wood" },
+        { x: 150, y: 250, w: 22, h: 28, kind: "lantern" },
+      ],
+      coins: [],
+    },
+    {
+      id: 22,
+      name: "三路",
+      hint: "先撞倒木台上的鬼。接著擋右邊的彈，再擋左邊的火球。",
+      ninja: stand(48),
+      princess: stand(230),
+      shots: [
+        { x: 160, y: 250, kind: "arrow", countdown: 3.3, speed: 500 },
+        { x: 318, y: 150, kind: "bullet", countdown: 2.8, speed: 460 },
+        { x: 36, y: 170, kind: "fireball", countdown: 2.6, speed: 320 },
+      ],
+      solids: [
+        { x: 110, y: 286, w: 130, h: 14, kind: "wood" },
+        { x: 150, y: 320, w: 30, h: 200, kind: "thorn" },
+        { x: 260, y: 186, w: 100, h: 16, kind: "wood" },
+        { x: 0, y: 206, w: 84, h: 16, kind: "wood" },
+      ],
+      coins: [],
+    },
+  ];
+
+  window.NINJA_LEVELS = LEVELS;
+})();
+</script>
+<script>
+/* Bodyguard physics for 忍者護公主.
+   Throw the ninja on a parabola. He can block the shot, ram the oni
+   before it fires, or shove the princess off a fixed aim line. */
+(function () {
+  "use strict";
+
+  var W = 360;
+  var H = 640;
+  var G = 1180;
+  var R = 16;
+  var PR = 20;
+  var BR = 8;
+
+  function floorOf() {
+    return { x: 0, y: 598, w: W, h: 42, kind: "stone" };
+  }
+
+  function bounds() {
+    return [
+      floorOf(),
+      { x: -48, y: -200, w: 48, h: 820, kind: "bounce" },
+      { x: W, y: -200, w: 48, h: 820, kind: "bounce" },
+    ];
+  }
+
+  function copySolid(s) {
+    return {
+      x: s.x, y: s.y, w: s.w, h: s.h, kind: s.kind,
+      x0: s.x, y0: s.y, amp: s.amp || 0, freq: s.freq || 1, axis: s.axis || "x",
+      broken: false,
+    };
+  }
+
+  function create(level) {
+    var list = level.pit ? [] : [floorOf()];
+    list = list.concat(bounds().slice(1));
+    var crates = [];
+    var lanterns = [];
+    (level.solids || []).forEach(function (s) {
+      if (s.kind === "crate" && s.loose) crates.push({ x: s.x, y: s.y, w: s.w, h: s.h, vx: 0, vy: 0, alive: true });
+      else if (s.kind === "lantern") lanterns.push({ x: s.x + s.w / 2, y: s.y + s.h / 2, r: 11, hung: true, vx: 0, vy: 0, rope: s.y });
+      else list.push(copySolid(s));
+    });
+    var ninja = { x: level.ninja.x, y: level.ninja.y, vx: 0, vy: 0, spin: 0 };
+    settle(ninja, list);
+    var princess = {
+      x: level.princess.x,
+      y: level.princess.y,
+      vx: 0,
+      vy: 0,
+      spin: 0,
+      loose: false,
+    };
+    var state = {
+      level: level,
+      w: W,
+      h: H,
+      solids: list,
+      crates: crates,
+      lanterns: lanterns,
+      ninja: ninja,
+      princess: princess,
+      home: { x: ninja.x, y: ninja.y },
+      onis: (level.shots || []).map(function (s) {
+        return { x: s.x, y: s.y, vx: 0, vy: 0, spin: 0, down: false };
+      }),
+      coins: (level.coins || []).map(function (c) { return { x: c.x, y: c.y, got: false }; }),
+      coinsGot: 0,
+      shotIndex: 0,
+      phase: "live",
+      phaseTime: 0,
+      time: 0,
+      countdown: (level.shots[0] && level.shots[0].countdown) || 3,
+      fired: false,
+      launched: false,
+      bullet: null,
+      aim: null,
+      status: "play",
+      reason: null,
+      events: [],
+      tumble: 0,
+      hug: 0,
+      preview: [],
+      path: null,
+      beep: 0,
+    };
+    refreshPath(state);
+    return state;
+  }
+
+  function settle(ninja, solids) {
+    for (var i = 0; i < 8; i++) {
+      if (!resolveCircle(ninja, 0, 0, solids, false)) break;
+    }
+  }
+
+  function princessAt(state) {
+    if (state.princess && state.princess.loose) return { x: state.princess.x, y: state.princess.y };
+    var p = state.level.princess;
+    var amp = p.amp || 0;
+    var freq = p.freq || 1.4;
+    return { x: p.x + Math.sin(state.time * freq) * amp, y: p.y };
+  }
+
+  function aimPoint(state) {
+    var shot = shotOf(state);
+    var live = princessAt(state);
+    if (!shot) return live;
+    if (shot.aim) return shot.aim;
+    if (shot.track) return live;
+    return { x: state.level.princess.x, y: state.level.princess.y };
+  }
+
+  function shotOf(state) {
+    return state.level.shots[state.shotIndex];
+  }
+
+  function blocksBullet(kind) {
+    return kind === "stone" || kind === "mirror" || kind === "bounce" || kind === "shield" || kind === "crate";
+  }
+
+  function reflects(kind) {
+    return kind === "mirror" || kind === "bounce";
+  }
+
+  function rayBox(ox, oy, dx, dy, box) {
+    var tmin = 0;
+    var tmax = 1e9;
+    var nx = 0;
+    var ny = 0;
+    var axes = [
+      [ox, dx, box.x, box.x + box.w, "x"],
+      [oy, dy, box.y, box.y + box.h, "y"],
+    ];
+    for (var i = 0; i < axes.length; i++) {
+      var o = axes[i][0];
+      var d = axes[i][1];
+      var min = axes[i][2];
+      var max = axes[i][3];
+      var axis = axes[i][4];
+      if (Math.abs(d) < 1e-8) {
+        if (o < min || o > max) return null;
+        continue;
+      }
+      var t1 = (min - o) / d;
+      var t2 = (max - o) / d;
+      var enter = d > 0 ? -1 : 1;
+      if (t1 > t2) {
+        var tmp = t1;
+        t1 = t2;
+        t2 = tmp;
+        enter = -enter;
+      }
+      if (t1 > tmin) {
+        tmin = t1;
+        nx = axis === "x" ? enter : 0;
+        ny = axis === "y" ? enter : 0;
+      }
+      if (t2 < tmax) tmax = t2;
+      if (tmin > tmax) return null;
+    }
+    if (tmin < 0 || tmin > 1e8) return null;
+    return { t: tmin, nx: nx, ny: ny };
+  }
+
+  function traceShot(x, y, tx, ty, solids, princess) {
+    var points = [{ x: x, y: y }];
+    var dx = tx - x;
+    var dy = ty - y;
+    var remain = Math.hypot(dx, dy);
+    var guard = 0;
+    while (remain > 2 && guard++ < 5) {
+      var len = Math.hypot(dx, dy) || 1;
+      var ux = dx / len;
+      var uy = dy / len;
+      var best = null;
+      for (var i = 0; i < solids.length; i++) {
+        var solid = solids[i];
+        if (!blocksBullet(solid.kind)) continue;
+        var hit = rayBox(x, y, ux, uy, solid);
+        if (!hit || hit.t < 1.2 || hit.t > remain) continue;
+        if (!best || hit.t < best.t) best = { t: hit.t, nx: hit.nx, ny: hit.ny, solid: solid };
+      }
+      if (!best) {
+        points.push({ x: x + ux * remain, y: y + uy * remain });
+        break;
+      }
+      var travel = Math.max(0, best.t - 0.8);
+      x += ux * travel;
+      y += uy * travel;
+      points.push({ x: x, y: y });
+      if (!reflects(best.solid.kind)) break;
+      if (best.nx) ux = -ux;
+      if (best.ny) uy = -uy;
+      var mag = Math.hypot(ux, uy) || 1;
+      ux /= mag;
+      uy /= mag;
+      remain = 980;
+      dx = ux * remain;
+      dy = uy * remain;
+      x += ux * 3;
+      y += uy * 3;
+    }
+    return finishPath(points, princess, true);
+  }
+
+  function finishPath(points, princess, open) {
+    if (!princess) return { points: points, hitsPrincess: open };
+    var bestT = null;
+    var bestD = 1e9;
+    var acc = 0;
+    for (var i = 0; i < points.length - 1; i++) {
+      var a = points[i];
+      var b = points[i + 1];
+      var dx = b.x - a.x;
+      var dy = b.y - a.y;
+      var len2 = dx * dx + dy * dy || 1;
+      var t = ((princess.x - a.x) * dx + (princess.y - a.y) * dy) / len2;
+      if (t < 0) t = 0;
+      if (t > 1) t = 1;
+      var px = a.x + dx * t;
+      var py = a.y + dy * t;
+      var d = Math.hypot(px - princess.x, py - princess.y);
+      if (d < bestD) {
+        bestD = d;
+        bestT = { i: i, t: t, x: px, y: py, acc: acc + Math.sqrt(len2) * t };
+      }
+      acc += Math.sqrt(len2);
+    }
+    if (!bestT || bestD > PR + 10) return { points: points, hitsPrincess: false };
+    var trimmed = points.slice(0, bestT.i + 1);
+    trimmed.push({ x: princess.x, y: princess.y });
+    return { points: trimmed, hitsPrincess: true };
+  }
+
+  function bulletSolids(state) {
+    var list = [];
+    for (var i = 0; i < state.solids.length; i++) {
+      var s = state.solids[i];
+      if (!s.broken && blocksBullet(s.kind)) list.push(s);
+    }
+    for (var c = 0; c < state.crates.length; c++) {
+      var box = state.crates[c];
+      if (box.alive) list.push({ x: box.x, y: box.y, w: box.w, h: box.h, kind: "crate" });
+    }
+    return list;
+  }
+
+  function refreshPath(state) {
+    var shot = shotOf(state);
+    if (!shot || state.fired) return;
+    var oni = state.onis[state.shotIndex];
+    var origin = oni && !oni.down ? oni : shot;
+    var home = { x: state.level.princess.x, y: state.level.princess.y };
+    var live = princessAt(state);
+    var aim = shot.aim || (shot.track ? live : home);
+    var threat = shot.track ? live : home;
+    state.path = traceShot(origin.x, origin.y, aim.x, aim.y, bulletSolids(state), threat);
+  }
+
+  function inside(px, py, box, pad) {
+    var m = pad || 0;
+    return px >= box.x - m && px <= box.x + box.w + m && py >= box.y - m && py <= box.y + box.h + m;
+  }
+
+  function windAt(state, x, y) {
+    var ax = 0;
+    var ay = 0;
+    var winds = state.level.winds || [];
+    for (var i = 0; i < winds.length; i++) {
+      if (inside(x, y, winds[i], 0)) {
+        ax += winds[i].ax;
+        ay += winds[i].ay;
+      }
+    }
+    return { ax: ax, ay: ay };
+  }
+
+  function circleHit(cx, cy, solids) {
+    var best = null;
+    for (var i = 0; i < solids.length; i++) {
+      var box = solids[i];
+      if (box.broken || box.kind === "thorn" || box.kind === "shield") continue;
+      var nx = Math.max(box.x, Math.min(cx, box.x + box.w));
+      var ny = Math.max(box.y, Math.min(cy, box.y + box.h));
+      var dx = cx - nx;
+      var dy = cy - ny;
+      var d2 = dx * dx + dy * dy;
+      if (d2 > R * R) continue;
+      var dist = Math.sqrt(d2);
+      var pen = R - dist;
+      var outx;
+      var outy;
+      if (dist < 0.001) {
+        var left = cx - box.x;
+        var right = box.x + box.w - cx;
+        var top = cy - box.y;
+        var bot = box.y + box.h - cy;
+        var m = Math.min(left, right, top, bot);
+        if (m === top) {
+          outx = 0;
+          outy = -1;
+          pen = R + top;
+        } else if (m === bot) {
+          outx = 0;
+          outy = 1;
+          pen = R + bot;
+        } else if (m === left) {
+          outx = -1;
+          outy = 0;
+          pen = R + left;
+        } else {
+          outx = 1;
+          outy = 0;
+          pen = R + right;
+        }
+      } else {
+        outx = dx / dist;
+        outy = dy / dist;
+      }
+      if (!best || pen > best.pen) best = { nx: outx, ny: outy, pen: pen, solid: box };
+    }
+    return best;
+  }
+
+  function resolveCircle(body, vx, vy, solids, bounce) {
+    var hit = circleHit(body.x, body.y, solids);
+    if (!hit) return false;
+    body.x += hit.nx * (hit.pen + 0.2);
+    body.y += hit.ny * (hit.pen + 0.2);
+    var into = vx * hit.nx + vy * hit.ny;
+    if (hit.solid.kind === "bamboo") {
+      hit.solid.broken = true;
+      body.vx = vx * 0.7;
+      body.vy = vy * 0.7;
+      return true;
+    }
+    if (into < 0) {
+      var spring = hit.solid.kind === "spring" && hit.ny < -0.4;
+      var reflect = bounce && (hit.solid.kind === "bounce" || hit.solid.kind === "mirror");
+      if (spring) {
+        body.vy = -Math.max(760, Math.abs(vy) * 1.05);
+        body.vx = vx * 0.92;
+      } else if (reflect) {
+        var rest = 0.78;
+        body.vx = vx - (1 + rest) * into * hit.nx;
+        body.vy = vy - (1 + rest) * into * hit.ny;
+      } else {
+        body.vx = vx - into * hit.nx;
+        body.vy = vy - into * hit.ny;
+        body.vx *= 0.82;
+        if (Math.abs(hit.ny) > 0.6) body.vy = 0;
+      }
+    }
+    return true;
+  }
+
+  function physics(state, body, dt, withWind) {
+    var wind = withWind ? windAt(state, body.x, body.y) : { ax: 0, ay: 0 };
+    body.vy += (G + wind.ay) * dt;
+    body.vx += wind.ax * dt;
+    body.x += body.vx * dt;
+    body.y += body.vy * dt;
+    body.spin += body.vx * dt * 0.01;
+    for (var k = 0; k < 3; k++) {
+      resolveCircle(body, body.vx, body.vy, state.solids, true);
+    }
+  }
+
+  function preview(state) {
+    if (!state.aim || state.launched || state.phase !== "live") {
+      state.preview = [];
+      return;
+    }
+    var dx = state.aim.x - state.ninja.x;
+    var dy = state.aim.y - state.ninja.y;
+    var dist = Math.hypot(dx, dy);
+    if (dist < 26) {
+      state.preview = [];
+      return;
+    }
+    var vel = velocityFrom(dx, dy, dist);
+    var ghost = { x: state.ninja.x, y: state.ninja.y, vx: vel.vx, vy: vel.vy, spin: 0 };
+    var pts = [{ x: ghost.x, y: ghost.y }];
+    var saved = state.time;
+    for (var i = 0; i < 48; i++) {
+      state.time = saved;
+      physics(state, ghost, 0.045, true);
+      pts.push({ x: ghost.x, y: ghost.y });
+      if (ghost.y > H + 40) break;
+    }
+    state.time = saved;
+    state.preview = pts;
+    state._vel = vel;
+  }
+
+  function velocityFrom(dx, dy, dist) {
+    var clamped = Math.min(dist, 220);
+    var speed = 280 + (clamped / 220) * 640;
+    return { vx: (dx / dist) * speed, vy: (dy / dist) * speed };
+  }
+
+  function setAim(state, x, y) {
+    if (state.phase !== "live" || state.launched || state.status !== "play") return;
+    state.aim = { x: x, y: y };
+    preview(state);
+  }
+
+  function clearAim(state) {
+    state.aim = null;
+    state.preview = [];
+  }
+
+  function release(state) {
+    if (!state._vel || state.phase !== "live" || state.launched) {
+      clearAim(state);
+      return false;
+    }
+    launch(state, state._vel.vx, state._vel.vy);
+    clearAim(state);
+    return true;
+  }
+
+  function launch(state, vx, vy) {
+    if (state.phase !== "live" || state.launched || state.status !== "play") return false;
+    state.ninja.vx = vx;
+    state.ninja.vy = vy;
+    state.launched = true;
+    state.events.push({ t: "throw" });
+    return true;
+  }
+
+  function fire(state) {
+    refreshPath(state);
+    var shot = shotOf(state);
+    state.fired = true;
+    state.bullet = {
+      points: state.path.points,
+      dist: 0,
+      speed: shot.speed || 460,
+      hitsPrincess: state.path.hitsPrincess,
+      kind: shot.kind || "arrow",
+    };
+    state.events.push({ t: "fire", kind: shot.kind || "arrow" });
+  }
+
+  function pointAlong(points, dist) {
+    var left = dist;
+    for (var i = 0; i < points.length - 1; i++) {
+      var a = points[i];
+      var b = points[i + 1];
+      var len = Math.hypot(b.x - a.x, b.y - a.y);
+      if (left <= len) {
+        var u = len ? left / len : 0;
+        return { x: a.x + (b.x - a.x) * u, y: a.y + (b.y - a.y) * u, done: false };
+      }
+      left -= len;
+    }
+    var last = points[points.length - 1];
+    return { x: last.x, y: last.y, done: true };
+  }
+
+  function pathLength(points) {
+    var n = 0;
+    for (var i = 0; i < points.length - 1; i++) {
+      n += Math.hypot(points[i + 1].x - points[i].x, points[i + 1].y - points[i].y);
+    }
+    return n;
+  }
+
+  function collect(state) {
+    for (var i = 0; i < state.coins.length; i++) {
+      var c = state.coins[i];
+      if (c.got) continue;
+      if (Math.hypot(c.x - state.ninja.x, c.y - state.ninja.y) < R + 12) {
+        c.got = true;
+        state.coinsGot++;
+        state.events.push({ t: "coin", x: c.x, y: c.y });
+      }
+    }
+  }
+
+  function beginNext(state) {
+    state.shotIndex++;
+    if (state.shotIndex >= state.level.shots.length) {
+      state.phase = "hug";
+      state.hug = 0;
+      state.bullet = null;
+      state.events.push({ t: "hug" });
+      return;
+    }
+    var shot = shotOf(state);
+    state.phase = "live";
+    state.phaseTime = 0;
+    state.countdown = shot.countdown || 3;
+    state.beep = Math.ceil(state.countdown);
+    state.fired = false;
+    state.launched = false;
+    state.bullet = null;
+    state.ninja.x = state.home.x;
+    state.ninja.y = state.home.y;
+    state.ninja.vx = 0;
+    state.ninja.vy = 0;
+    state.ninja.spin = 0;
+    settle(state.ninja, state.solids);
+    refreshPath(state);
+  }
+
+  function blockShot(state) {
+    state.bullet = null;
+    state.phase = "tumble";
+    state.tumble = 0;
+    state.ninja.spin = state.ninja.vx > 0 ? 2 : -2;
+    state.events.push({ t: "block" });
+  }
+
+  function fail(state, reason) {
+    state.status = "lost";
+    state.reason = reason;
+    state.phase = "lost";
+    state.events.push({ t: "lose", reason: reason });
+  }
+
+  function moveStages(state) {
+    for (var i = 0; i < state.solids.length; i++) {
+      var s = state.solids[i];
+      if (s.kind !== "mover") continue;
+      var prevX = s.x;
+      var prevY = s.y;
+      var wave = Math.sin(state.time * (s.freq || 1));
+      if (s.axis === "y") s.y = s.y0 + wave * (s.amp || 0);
+      else s.x = s.x0 + wave * (s.amp || 0);
+      s.dx = s.x - prevX;
+      s.dy = s.y - prevY;
+    }
+  }
+
+  function carry(state, body) {
+    for (var i = 0; i < state.solids.length; i++) {
+      var s = state.solids[i];
+      if (s.kind !== "mover" || !s.dx && !s.dy) continue;
+      var onTop = body.y + R >= s.y - 6 && body.y + R <= s.y + 14 && body.x > s.x && body.x < s.x + s.w && body.vy >= -20;
+      if (onTop) {
+        body.x += s.dx || 0;
+        body.y += s.dy || 0;
+      }
+    }
+  }
+
+  function overlaps(cx, cy, r, box) {
+    var nx = Math.max(box.x, Math.min(cx, box.x + box.w));
+    var ny = Math.max(box.y, Math.min(cy, box.y + box.h));
+    var dx = cx - nx;
+    var dy = cy - ny;
+    return dx * dx + dy * dy < r * r;
+  }
+
+  function hazards(state, body, who) {
+    for (var i = 0; i < state.solids.length; i++) {
+      var s = state.solids[i];
+      if (s.kind !== "thorn" || s.broken) continue;
+      if (overlaps(body.x, body.y, who === "princess" ? PR : R, s)) {
+        fail(state, who === "princess" ? "thorn" : "ninja-thorn");
+        return true;
+      }
+    }
+    if (body.y > H + 30) {
+      fail(state, who === "princess" ? "fall" : "ninja-thorn");
+      return true;
+    }
+    return false;
+  }
+
+  function separate(a, ar, b, br) {
+    var dx = b.x - a.x;
+    var dy = b.y - a.y;
+    var dist = Math.hypot(dx, dy) || 0.001;
+    var overlap = ar + br - dist;
+    if (overlap <= 0) return false;
+    var nx = dx / dist;
+    var ny = dy / dist;
+    b.x += nx * (overlap + 0.4);
+    b.y += ny * (overlap + 0.4);
+    var push = a.vx * nx + a.vy * ny;
+    if (push > 0) {
+      b.vx += nx * push * 0.95;
+      b.vy += ny * push * 0.95;
+    }
+    b.spin = a.vx * 0.015;
+    return true;
+  }
+
+  function shovePeople(state) {
+    var ninja = state.ninja;
+    var princess = state.princess;
+    if (state.launched && separate(ninja, R, princess, PR)) {
+      if (!princess.loose) state.events.push({ t: "shove" });
+      princess.loose = true;
+    }
+    var oni = state.onis[state.shotIndex];
+    if (oni && !oni.down && state.launched && separate(ninja, R, oni, 18)) {
+      oni.down = true;
+      oni.spin = ninja.vx >= 0 ? 4 : -4;
+      state.events.push({ t: "ram" });
+      if (!state.fired) {
+        state.fired = true;
+        state.bullet = null;
+        state.phase = "tumble";
+        state.tumble = 0;
+        state.ninja.spin = ninja.vx >= 0 ? 1.4 : -1.4;
+      }
+    }
+  }
+
+  function cratePhysics(state, dt) {
+    for (var i = 0; i < state.crates.length; i++) {
+      var box = state.crates[i];
+      if (!box.alive) continue;
+      var cx = box.x + box.w / 2;
+      var cy = box.y + box.h / 2;
+      if (state.launched && overlaps(state.ninja.x, state.ninja.y, R, box)) {
+        var speed = Math.hypot(state.ninja.vx, state.ninja.vy);
+        if (speed > 560) {
+          box.alive = false;
+          state.events.push({ t: "break", x: cx, y: cy });
+          continue;
+        }
+        var dx = cx - state.ninja.x;
+        var dy = cy - state.ninja.y;
+        var dist = Math.hypot(dx, dy) || 1;
+        box.vx += (dx / dist) * Math.max(0, state.ninja.vx * dx / dist) * 0.8;
+        box.vy += (dy / dist) * 80;
+        box.x += (dx / dist) * 4;
+      }
+      box.vy += G * dt * 0.35;
+      box.vx *= 0.92;
+      box.x += box.vx * dt;
+      box.y += box.vy * dt;
+      var body = { x: cx + box.vx * dt, y: box.y + box.h / 2, vx: box.vx, vy: box.vy };
+      body.x = box.x + box.w / 2;
+      body.y = box.y + box.h / 2;
+      if (resolveCircle(body, box.vx, box.vy, state.solids, false)) {
+        box.x = body.x - box.w / 2;
+        box.y = body.y - box.h / 2;
+        box.vx = body.vx;
+        box.vy = body.vy;
+      }
+    }
+  }
+
+  function lanternPhysics(state, dt) {
+    for (var i = 0; i < state.lanterns.length; i++) {
+      var lamp = state.lanterns[i];
+      if (lamp.hung && state.launched && Math.hypot(lamp.x - state.ninja.x, lamp.y - state.ninja.y) < R + lamp.r) {
+        lamp.hung = false;
+        lamp.vx = state.ninja.vx * 0.35;
+        lamp.vy = state.ninja.vy * 0.35;
+        state.events.push({ t: "lamp" });
+      }
+      if (!lamp.hung) {
+        lamp.vy += G * dt;
+        lamp.x += lamp.vx * dt;
+        lamp.y += lamp.vy * dt;
+        if (lamp.y > 590) {
+          lamp.y = 590;
+          lamp.vy *= -0.2;
+          lamp.vx *= 0.6;
+        }
+      }
+    }
+  }
+
+  function step(state, dt) {
+    if (state.status === "won" || state.status === "lost") return;
+    if (dt > 0.05) dt = 0.05;
+    state.time += dt;
+    state.phaseTime += dt;
+    moveStages(state);
+
+    if (state.phase === "hug") {
+      var p = princessAt(state);
+      var dx = p.x - state.ninja.x;
+      var dy = p.y - 36 - state.ninja.y;
+      var dist = Math.hypot(dx, dy) || 1;
+      var stepPx = Math.min(dist, 220 * dt);
+      state.ninja.x += (dx / dist) * stepPx;
+      state.ninja.y += (dy / dist) * stepPx;
+      state.ninja.vx = 0;
+      state.ninja.vy = 0;
+      state.hug += dt;
+      if (state.hug > 0.85) {
+        state.status = "won";
+        state.events.push({ t: "win", coins: state.coinsGot, total: state.coins.length });
+      }
+      return;
+    }
+
+    if (state.phase === "tumble") {
+      physics(state, state.ninja, dt, false);
+      state.tumble += dt;
+      if (state.tumble > 0.72) beginNext(state);
+      return;
+    }
+
+    if (state.launched && state.phase === "live") {
+      physics(state, state.ninja, dt, true);
+      carry(state, state.ninja);
+      collect(state);
+      shovePeople(state);
+      if (state.status !== "play" || state.phase !== "live") return;
+      if (hazards(state, state.ninja, "ninja")) return;
+    }
+    cratePhysics(state, dt);
+    lanternPhysics(state, dt);
+
+    if (!state.fired && state.phase === "live") {
+      var prev = Math.ceil(state.countdown);
+      state.countdown -= dt;
+      var next = Math.ceil(Math.max(0, state.countdown));
+      if (next < prev && next > 0) state.events.push({ t: "beep", n: next });
+      refreshPath(state);
+      if (state.countdown <= 0) fire(state);
+    }
+    var princess = state.princess;
+    if (!princess.loose) {
+      var tracked = princessAt(state);
+      princess.x = tracked.x;
+      princess.y = tracked.y;
+    } else {
+      physics(state, princess, dt, false);
+      if (hazards(state, princess, "princess")) return;
+    }
+    var oni = state.onis[state.shotIndex];
+    if (oni && oni.down && state.phase === "live") {
+      oni.vy += G * dt * 0.5;
+      oni.x += oni.vx * dt;
+      oni.y += oni.vy * dt;
+      oni.spin += dt * 6;
+    }
+
+    if (state.bullet) {
+      var prevDist = state.bullet.dist;
+      state.bullet.dist += state.bullet.speed * dt;
+      var total = pathLength(state.bullet.points);
+      var a = pointAlong(state.bullet.points, prevDist);
+      var b = pointAlong(state.bullet.points, state.bullet.dist);
+      var live = princessAt(state);
+      var closeToPrincess = Math.hypot(b.x - live.x, b.y - live.y) < PR + 2;
+      var hit = segmentHits(a.x, a.y, b.x, b.y, state.ninja.x, state.ninja.y, R + BR);
+      if (hit && !closeToPrincess) {
+        blockShot(state);
+        return;
+      }
+      var shot = shotOf(state);
+      if (closeToPrincess || (state.bullet.dist >= total - 1 && shot && shot.track && state.bullet.hitsPrincess)) {
+        fail(state, (shot && shot.kind) || "arrow");
+        return;
+      }
+      if (state.bullet.dist >= total - 1) beginNext(state);
+    }
+  }
+
+  function segmentHits(x1, y1, x2, y2, cx, cy, rad) {
+    var dx = x2 - x1;
+    var dy = y2 - y1;
+    var len2 = dx * dx + dy * dy || 1;
+    var t = ((cx - x1) * dx + (cy - y1) * dy) / len2;
+    if (t < 0) t = 0;
+    if (t > 1) t = 1;
+    var px = x1 + dx * t;
+    var py = y1 + dy * t;
+    return (px - cx) * (px - cx) + (py - cy) * (py - cy) <= rad * rad;
+  }
+
+  function starsFor(state) {
+    if (state.status !== "won") return 0;
+    var total = state.coins.length;
+    if (!total || state.coinsGot >= total) return 3;
+    if (state.coinsGot * 2 >= total) return 2;
+    return 1;
+  }
+
+  function clone(state) {
+    return {
+      level: state.level,
+      w: state.w,
+      h: state.h,
+      solids: state.solids.map(function (s) { return Object.assign({}, s); }),
+      crates: state.crates.map(function (c) { return Object.assign({}, c); }),
+      lanterns: state.lanterns.map(function (l) { return Object.assign({}, l); }),
+      ninja: { x: state.ninja.x, y: state.ninja.y, vx: state.ninja.vx, vy: state.ninja.vy, spin: state.ninja.spin },
+      princess: Object.assign({}, state.princess),
+      onis: state.onis.map(function (o) { return Object.assign({}, o); }),
+      home: { x: state.home.x, y: state.home.y },
+      coins: state.coins.map(function (c) { return { x: c.x, y: c.y, got: c.got }; }),
+      coinsGot: state.coinsGot,
+      shotIndex: state.shotIndex,
+      phase: state.phase,
+      phaseTime: state.phaseTime,
+      time: state.time,
+      countdown: state.countdown,
+      fired: state.fired,
+      launched: state.launched,
+      bullet: state.bullet ? {
+        points: state.bullet.points,
+        dist: state.bullet.dist,
+        speed: state.bullet.speed,
+        hitsPrincess: state.bullet.hitsPrincess,
+        kind: state.bullet.kind,
+      } : null,
+      aim: null,
+      status: state.status,
+      reason: state.reason,
+      events: [],
+      tumble: state.tumble,
+      hug: state.hug,
+      preview: [],
+      path: state.path,
+      beep: state.beep,
+    };
+  }
+
+  function findThrows(level) {
+    var angles = [];
+    for (var a = -Math.PI + 0.12; a < -0.05; a += 0.12) angles.push(a);
+    var speeds = [340, 480, 620, 760, 900, 1040];
+    var plan = [];
+    var state = create(level);
+    for (var s = 0; s < level.shots.length; s++) {
+      var best = null;
+      for (var ti = 0; ti < 8; ti++) {
+        var t = 0.15 + ti * 0.4;
+        for (var ai = 0; ai < angles.length; ai++) {
+          for (var si = 0; si < speeds.length; si++) {
+            var trial = clone(state);
+            var thrown = false;
+            var guard = 0;
+            while (guard++ < 520 && trial.status === "play" && trial.shotIndex === s) {
+              if (!thrown && trial.phase === "live" && trial.phaseTime >= t) {
+                launch(trial, Math.cos(angles[ai]) * speeds[si], Math.sin(angles[ai]) * speeds[si]);
+                thrown = true;
+              }
+              step(trial, 1 / 60);
+            }
+            var ok = trial.status !== "lost" && (trial.shotIndex > s || trial.phase === "hug" || trial.status === "won");
+            if (!ok) continue;
+            var score = trial.coinsGot * 100 - t;
+            if (!best || score > best.score) {
+              best = { t: t, vx: Math.cos(angles[ai]) * speeds[si], vy: Math.sin(angles[ai]) * speeds[si], score: score, coins: trial.coinsGot, state: trial };
+            }
+          }
+        }
+      }
+      if (!best) return { ok: false, shot: s, plan: plan };
+      plan.push({ t: best.t, vx: best.vx, vy: best.vy });
+      state = best.state;
+      if (state.phase !== "live" && state.shotIndex === s + 1) {
+        /* already at next shot */
+      }
+    }
+    var finished = state;
+    var guard2 = 0;
+    while (finished.status === "play" && guard2++ < 400) step(finished, 1 / 60);
+    return {
+      ok: finished.status === "won",
+      coins: finished.coinsGot,
+      total: finished.coins.length,
+      stars: starsFor(finished),
+      plan: plan,
+    };
+  }
+
+  window.NinjaEngine = {
+    W: W,
+    H: H,
+    R: R,
+    create: create,
+    step: step,
+    setAim: setAim,
+    release: release,
+    clearAim: clearAim,
+    launch: launch,
+    princessAt: princessAt,
+    starsFor: starsFor,
+    clone: clone,
+    findThrows: findThrows,
+    traceShot: traceShot,
+    bulletPosition: function (state) {
+      if (!state.bullet) return null;
+      return pointAlong(state.bullet.points, state.bullet.dist);
+    },
+  };
+})();
+</script>
+<script>
+/* Original cartoon art for 忍者護公主.
+   Flat shapes, thick ink, and big heads. Nothing here is traced
+   from another game's sprites. */
+(function () {
+  "use strict";
+
+  var INK = "#1b2430";
+  var shake = 0;
+
+  var POSE = {
+    cool: { la: 2.55, ra: 0.62, ll: 1.75, rl: 1.32, mood: "cool" },
+    panic: { la: -2.55, ra: -0.58, ll: 1.85, rl: 1.28, mood: "panic" },
+    angry: { la: 2.75, ra: 0.2, ll: 1.7, rl: 1.38, mood: "angry" },
+    tumble: { la: -2.35, ra: -0.35, ll: 2.45, rl: 0.62, mood: "spin" },
+    jump: { la: -2.45, ra: -0.7, ll: 2.15, rl: 0.95, mood: "happy" },
+    hug: { la: -2.4, ra: 0.15, ll: 2.05, rl: 1.05, mood: "happy" },
+  };
+
+  function reset() { shake = 0; }
+
+  function note(ev) {
+    if (!ev) return;
+    if (ev.t === "block" || ev.t === "lose" || ev.t === "ram") shake = 8;
+  }
+
+  function fillStroke(ctx, s) {
+    ctx.fill();
+    ctx.strokeStyle = INK;
+    ctx.lineWidth = Math.max(1.8, s * 0.05);
+    ctx.lineJoin = "round";
+    ctx.lineCap = "round";
+    ctx.stroke();
+  }
+
+  function roundRect(ctx, x, y, w, h, r) {
+    var rr = Math.min(r, Math.abs(w) / 2, Math.abs(h) / 2);
+    ctx.beginPath();
+    ctx.moveTo(x + rr, y);
+    ctx.arcTo(x + w, y, x + w, y + h, rr);
+    ctx.arcTo(x + w, y + h, x, y + h, rr);
+    ctx.arcTo(x, y + h, x, y, rr);
+    ctx.arcTo(x, y, x + w, y, rr);
+    ctx.closePath();
+  }
+
+  function world(cam, x, y) {
+    return { x: cam.x + x * cam.s, y: cam.y + y * cam.s };
+  }
+
+  function arm(ctx, x, y, angle, len, s, color) {
+    var x2 = x + Math.cos(angle) * len;
+    var y2 = y + Math.sin(angle) * len;
+    ctx.lineCap = "round";
+    ctx.strokeStyle = INK;
+    ctx.lineWidth = s * 0.15;
+    ctx.beginPath();
+    ctx.moveTo(x, y);
+    ctx.lineTo(x2, y2);
+    ctx.stroke();
+    ctx.strokeStyle = color;
+    ctx.lineWidth = s * 0.09;
+    ctx.beginPath();
+    ctx.moveTo(x, y);
+    ctx.lineTo(x2, y2);
+    ctx.stroke();
+    ctx.fillStyle = color;
+    ctx.beginPath();
+    ctx.arc(x2, y2, s * 0.055, 0, Math.PI * 2);
+    fillStroke(ctx, s * 0.8);
+  }
+
+  function legs(ctx, s, color, pose) {
+    var p = POSE[pose] || POSE.cool;
+    var hip = -s * 0.28;
+    var len = s * 0.3;
+    var right = pose === "jump" || pose === "hug" ? len * 0.72 : len;
+    arm(ctx, -s * 0.07, hip, p.ll, len, s, color);
+    arm(ctx, s * 0.07, hip, p.rl, right, s, color);
+  }
+
+  function arms(ctx, s, color, pose, hold) {
+    var p = POSE[pose] || POSE.cool;
+    arm(ctx, -s * 0.1, -s * 0.5, p.la, s * 0.38, s, color);
+    if (!hold) arm(ctx, s * 0.1, -s * 0.5, p.ra, s * 0.38, s, color);
+  }
+
+  function eyes(ctx, y, s, mood, skin) {
+    var gap = s * 0.125;
+    var r = s * (mood === "panic" ? 0.125 : 0.108);
+    var i;
+    for (i = -1; i <= 1; i += 2) {
+      var ex = i * gap;
+      if (mood === "spin") {
+        ctx.strokeStyle = INK;
+        ctx.lineWidth = Math.max(1.4, s * 0.035);
+        ctx.beginPath();
+        var a;
+        for (a = 0; a < 9; a += 0.45) {
+          var rad = (a / 9) * r;
+          var px = ex + Math.cos(a) * rad;
+          var py = y + Math.sin(a) * rad;
+          if (a === 0) ctx.moveTo(px, py);
+          else ctx.lineTo(px, py);
+        }
+        ctx.stroke();
+        continue;
+      }
+      ctx.fillStyle = "#fff";
+      ctx.beginPath();
+      ctx.arc(ex, y, r, 0, Math.PI * 2);
+      fillStroke(ctx, s * 0.75);
+      var px2 = ex;
+      var py = y + (mood === "cool" ? r * 0.15 : mood === "panic" ? -r * 0.18 : 0);
+      ctx.fillStyle = INK;
+      ctx.beginPath();
+      ctx.arc(px2, py, r * (mood === "panic" ? 0.4 : 0.48), 0, Math.PI * 2);
+      ctx.fill();
+      ctx.fillStyle = "#fff";
+      ctx.beginPath();
+      ctx.arc(px2 - r * 0.22, py - r * 0.22, r * 0.16, 0, Math.PI * 2);
+      ctx.fill();
+      if (mood === "cool") {
+        ctx.strokeStyle = skin;
+        ctx.lineWidth = r * 0.95;
+        ctx.lineCap = "butt";
+        ctx.beginPath();
+        ctx.moveTo(ex - r * 0.95, y - r * 0.2);
+        ctx.lineTo(ex + r * 0.95, y - r * 0.05);
+        ctx.stroke();
+        ctx.strokeStyle = INK;
+        ctx.lineWidth = Math.max(1.4, s * 0.03);
+        ctx.beginPath();
+        ctx.moveTo(ex - r, y - r * 0.55);
+        ctx.lineTo(ex + r * 0.7, y - r * 0.15);
+        ctx.stroke();
+      }
+      if (mood === "panic") {
+        ctx.strokeStyle = INK;
+        ctx.lineWidth = Math.max(1.4, s * 0.03);
+        ctx.beginPath();
+        ctx.moveTo(ex - r, y - r * 1.45);
+        ctx.quadraticCurveTo(ex, y - r * 1.9, ex + r, y - r * 1.3);
+        ctx.stroke();
+      }
+      if (mood === "angry") {
+        ctx.strokeStyle = INK;
+        ctx.lineWidth = Math.max(1.6, s * 0.045);
+        ctx.beginPath();
+        ctx.moveTo(ex - r * 1.1, y - r * (i < 0 ? 1.15 : 0.7));
+        ctx.lineTo(ex + r * 1.05, y - r * (i < 0 ? 0.55 : 1.25));
+        ctx.stroke();
+      }
+    }
+  }
+
+  function mouth(ctx, y, s, mood) {
+    ctx.strokeStyle = INK;
+    ctx.lineWidth = Math.max(1.5, s * 0.035);
+    ctx.lineCap = "round";
+    if (mood === "panic") {
+      ctx.fillStyle = "#7a1e2a";
+      ctx.beginPath();
+      ctx.ellipse(0, y, s * 0.05, s * 0.065, 0, 0, Math.PI * 2);
+      fillStroke(ctx, s * 0.7);
+    } else if (mood === "happy") {
+      ctx.fillStyle = "#7a1e2a";
+      ctx.beginPath();
+      ctx.arc(0, y - s * 0.02, s * 0.07, 0.2, Math.PI - 0.2);
+      ctx.fill();
+      ctx.beginPath();
+      ctx.arc(0, y - s * 0.02, s * 0.07, 0.2, Math.PI - 0.2);
+      ctx.stroke();
+    } else if (mood === "angry") {
+      ctx.beginPath();
+      ctx.moveTo(-s * 0.07, y);
+      ctx.quadraticCurveTo(s * 0.02, y + s * 0.055, s * 0.09, y - s * 0.02);
+      ctx.stroke();
+      ctx.fillStyle = "#fff";
+      ctx.beginPath();
+      ctx.moveTo(s * 0.02, y + s * 0.01);
+      ctx.lineTo(s * 0.045, y + s * 0.045);
+      ctx.lineTo(s * 0.07, y + s * 0.005);
+      ctx.fill();
+      ctx.stroke();
+    } else if (mood === "cool") {
+      ctx.beginPath();
+      ctx.moveTo(-s * 0.045, y);
+      ctx.quadraticCurveTo(0, y + s * 0.03, s * 0.05, y - s * 0.005);
+      ctx.stroke();
+    }
+  }
+
+  function shadow(ctx, s) {
+    ctx.fillStyle = "rgba(20, 50, 60, 0.18)";
+    ctx.beginPath();
+    ctx.ellipse(0, 4, s * 0.28, s * 0.07, 0, 0, Math.PI * 2);
+    ctx.fill();
+  }
+
+  function weapon(ctx, s, kind) {
+    ctx.save();
+    ctx.translate(s * 0.14, -s * 0.5);
+    if (kind === "arrow") {
+      ctx.strokeStyle = INK;
+      ctx.lineWidth = s * 0.075;
+      ctx.beginPath();
+      ctx.arc(0, 0, s * 0.16, -1.25, 1.25);
+      ctx.stroke();
+      ctx.strokeStyle = "#f0c36a";
+      ctx.lineWidth = s * 0.035;
+      ctx.beginPath();
+      ctx.arc(0, 0, s * 0.16, -1.25, 1.25);
+      ctx.stroke();
+      ctx.strokeStyle = INK;
+      ctx.lineWidth = Math.max(1.2, s * 0.02);
+      ctx.beginPath();
+      ctx.moveTo(Math.cos(-1.25) * s * 0.16, Math.sin(-1.25) * s * 0.16);
+      ctx.lineTo(Math.cos(1.25) * s * 0.16, Math.sin(1.25) * s * 0.16);
+      ctx.stroke();
+    } else if (kind === "fireball") {
+      ctx.fillStyle = "#6b3a22";
+      roundRect(ctx, 0, -s * 0.03, s * 0.26, s * 0.06, s * 0.02);
+      fillStroke(ctx, s);
+      ctx.fillStyle = "#ffb020";
+      ctx.beginPath();
+      ctx.arc(s * 0.3, 0, s * 0.075, 0, Math.PI * 2);
+      fillStroke(ctx, s);
+      ctx.fillStyle = "#fff1b0";
+      ctx.beginPath();
+      ctx.arc(s * 0.3, 0, s * 0.035, 0, Math.PI * 2);
+      ctx.fill();
+    } else {
+      ctx.rotate(-0.2);
+      ctx.fillStyle = "#2c3442";
+      roundRect(ctx, 0, -s * 0.045, s * 0.4, s * 0.09, s * 0.03);
+      fillStroke(ctx, s);
+      ctx.fillStyle = "#cfd6e0";
+      ctx.fillRect(s * 0.3, -s * 0.03, s * 0.1, s * 0.06);
+      ctx.fillStyle = "#e23b3b";
+      ctx.beginPath();
+      ctx.arc(s * 0.08, s * 0.02, s * 0.03, 0, Math.PI * 2);
+      ctx.fill();
+    }
+    ctx.restore();
+  }
+
+  function actor(ctx, x, y, s, now, opt, draw) {
+    var pose = opt.pose || "cool";
+    var bob = pose === "jump" || pose === "hug" ? Math.abs(Math.sin(now / 180)) * s * 0.08 : 0;
+    var breathe = pose === "tumble" ? 0 : Math.sin(now / 420) * s * 0.012;
+    ctx.save();
+    ctx.translate(x, y - bob - breathe);
+    ctx.rotate(opt.spin || 0);
+    ctx.scale(opt.facing || 1, 1);
+    shadow(ctx, s);
+    draw(pose);
+    ctx.restore();
+  }
+
+  function drawNinja(ctx, x, y, s, now, opt) {
+    actor(ctx, x, y, s, now, opt, function (pose) {
+      var mood = POSE[pose].mood;
+      var cloth = "#2c3a50";
+      var skin = "#ffd0ad";
+      legs(ctx, s, cloth, pose);
+      arms(ctx, s, cloth, pose, false);
+      ctx.fillStyle = cloth;
+      roundRect(ctx, -s * 0.16, -s * 0.58, s * 0.32, s * 0.34, s * 0.08);
+      fillStroke(ctx, s);
+      ctx.fillStyle = "#e23b4a";
+      ctx.beginPath();
+      ctx.moveTo(-s * 0.04, -s * 0.5);
+      ctx.lineTo(s * 0.2, -s * 0.42);
+      ctx.lineTo(s * 0.34, -s * 0.16);
+      ctx.lineTo(s * 0.16, -s * 0.22);
+      ctx.lineTo(s * 0.08, -s * 0.44);
+      ctx.closePath();
+      fillStroke(ctx, s);
+      ctx.fillStyle = cloth;
+      ctx.beginPath();
+      ctx.arc(0, -s * 0.78, s * 0.32, 0, Math.PI * 2);
+      fillStroke(ctx, s);
+      ctx.fillStyle = skin;
+      ctx.beginPath();
+      ctx.ellipse(0, -s * 0.74, s * 0.2, s * 0.14, 0, 0, Math.PI * 2);
+      fillStroke(ctx, s);
+      ctx.fillStyle = "#e23b4a";
+      roundRect(ctx, -s * 0.3, -s * 0.9, s * 0.6, s * 0.07, s * 0.02);
+      fillStroke(ctx, s);
+      ctx.beginPath();
+      ctx.moveTo(s * 0.28, -s * 0.86);
+      ctx.lineTo(s * 0.46, -s * 0.78);
+      ctx.lineTo(s * 0.28, -s * 0.8);
+      ctx.fill();
+      eyes(ctx, -s * 0.74, s, mood, skin);
+      if (mood !== "spin") mouth(ctx, -s * 0.64, s, mood);
+    });
+  }
+
+  function drawPrincess(ctx, x, y, s, now, opt) {
+    actor(ctx, x, y, s, now, opt, function (pose) {
+      var mood = POSE[pose].mood;
+      var skin = "#ffd2b3";
+      var dress = "#ff7aa8";
+      legs(ctx, s, skin, pose);
+      arms(ctx, s, skin, pose, false);
+      ctx.fillStyle = dress;
+      ctx.beginPath();
+      ctx.moveTo(-s * 0.16, -s * 0.56);
+      ctx.lineTo(s * 0.16, -s * 0.56);
+      ctx.lineTo(s * 0.36, -s * 0.04);
+      ctx.lineTo(-s * 0.36, -s * 0.04);
+      ctx.closePath();
+      fillStroke(ctx, s);
+      ctx.fillStyle = "#fff";
+      ctx.beginPath();
+      ctx.moveTo(0, -s * 0.56);
+      ctx.lineTo(-s * 0.1, -s * 0.34);
+      ctx.lineTo(0, -s * 0.3);
+      ctx.lineTo(s * 0.1, -s * 0.34);
+      ctx.closePath();
+      fillStroke(ctx, s);
+      ctx.fillStyle = "#ffd15a";
+      roundRect(ctx, -s * 0.22, -s * 0.36, s * 0.44, s * 0.09, s * 0.02);
+      fillStroke(ctx, s);
+      ctx.fillStyle = "#241820";
+      ctx.beginPath();
+      ctx.arc(0, -s * 0.8, s * 0.34, 0, Math.PI * 2);
+      fillStroke(ctx, s);
+      ctx.fillStyle = skin;
+      ctx.beginPath();
+      ctx.arc(0, -s * 0.76, s * 0.28, 0, Math.PI * 2);
+      fillStroke(ctx, s);
+      ctx.fillStyle = "#241820";
+      ctx.beginPath();
+      ctx.arc(0, -s * 0.86, s * 0.29, Math.PI, 0, true);
+      ctx.fill();
+      ctx.fillRect(-s * 0.32, -s * 0.78, s * 0.09, s * 0.26);
+      ctx.fillRect(s * 0.23, -s * 0.78, s * 0.09, s * 0.26);
+      ctx.strokeStyle = INK;
+      ctx.lineWidth = Math.max(1.6, s * 0.04);
+      ctx.strokeRect(-s * 0.32, -s * 0.78, s * 0.09, s * 0.26);
+      ctx.strokeRect(s * 0.23, -s * 0.78, s * 0.09, s * 0.26);
+      if (mood === "panic" || mood === "happy") {
+        ctx.fillStyle = "rgba(255, 110, 140, 0.9)";
+        ctx.beginPath();
+        ctx.ellipse(-s * 0.16, -s * 0.68, s * 0.045, s * 0.028, 0, 0, Math.PI * 2);
+        ctx.ellipse(s * 0.16, -s * 0.68, s * 0.045, s * 0.028, 0, 0, Math.PI * 2);
+        ctx.fill();
+      }
+      eyes(ctx, -s * 0.78, s, mood, skin);
+      if (mood !== "spin") mouth(ctx, -s * 0.66, s, mood);
+      ctx.fillStyle = "#ffd15a";
+      ctx.beginPath();
+      ctx.arc(s * 0.22, -s * 1.05, s * 0.055, 0, Math.PI * 2);
+      fillStroke(ctx, s);
+      ctx.fillStyle = "#fff";
+      ctx.beginPath();
+      ctx.arc(s * 0.2, -s * 1.07, s * 0.02, 0, Math.PI * 2);
+      ctx.fill();
+      if (mood === "panic") {
+        ctx.fillStyle = "#7fd4ea";
+        ctx.beginPath();
+        ctx.ellipse(s * 0.38, -s * 0.7, s * 0.03, s * 0.05, 0.5, 0, Math.PI * 2);
+        fillStroke(ctx, s * 0.7);
+      }
+    });
+  }
+
+  function drawOni(ctx, x, y, s, now, opt) {
+    actor(ctx, x, y, s, now, opt, function (pose) {
+      var mood = POSE[pose].mood;
+      var skin = opt.skin || "#ef4b3f";
+      var hold = pose === "angry";
+      legs(ctx, s, skin, pose);
+      arms(ctx, s, skin, pose, hold);
+      ctx.fillStyle = "#1b2430";
+      roundRect(ctx, -s * 0.16, -s * 0.34, s * 0.32, s * 0.1, s * 0.03);
+      fillStroke(ctx, s);
+      ctx.fillStyle = skin;
+      roundRect(ctx, -s * 0.2, -s * 0.6, s * 0.4, s * 0.32, s * 0.1);
+      fillStroke(ctx, s);
+      if (hold) weapon(ctx, s, opt.weapon || "bullet");
+      ctx.fillStyle = skin;
+      ctx.beginPath();
+      ctx.arc(0, -s * 0.82, s * 0.3, 0, Math.PI * 2);
+      fillStroke(ctx, s);
+      ctx.fillStyle = "#ffe29a";
+      ctx.beginPath();
+      ctx.moveTo(-s * 0.16, -s * 1.02);
+      ctx.lineTo(-s * 0.28, -s * 1.32);
+      ctx.lineTo(-s * 0.02, -s * 1.0);
+      ctx.closePath();
+      fillStroke(ctx, s);
+      ctx.beginPath();
+      ctx.moveTo(s * 0.16, -s * 1.02);
+      ctx.lineTo(s * 0.28, -s * 1.32);
+      ctx.lineTo(s * 0.02, -s * 1.0);
+      ctx.closePath();
+      fillStroke(ctx, s);
+      eyes(ctx, -s * 0.84, s, mood, skin);
+      if (mood !== "spin") mouth(ctx, -s * 0.7, s, mood);
+    });
+  }
+
+  function sky(ctx, w, h) {
+    var g = ctx.createLinearGradient(0, 0, 0, h);
+    g.addColorStop(0, "#c8f7ff");
+    g.addColorStop(0.55, "#5ad4ea");
+    g.addColorStop(1, "#2eb6d0");
+    ctx.fillStyle = g;
+    ctx.fillRect(0, 0, w, h);
+  }
+
+  function cloud(ctx, x, y, s) {
+    ctx.fillStyle = "rgba(255,255,255,0.95)";
+    ctx.beginPath();
+    ctx.arc(x, y, s * 0.55, 0, Math.PI * 2);
+    ctx.arc(x + s * 0.45, y + s * 0.05, s * 0.4, 0, Math.PI * 2);
+    ctx.arc(x - s * 0.4, y + s * 0.08, s * 0.36, 0, Math.PI * 2);
+    ctx.fill();
+  }
+
+  function clouds(ctx, w, h, now) {
+    var spots = [[0.16, 0.14, 34], [0.48, 0.08, 26], [0.74, 0.18, 30]];
+    for (var i = 0; i < spots.length; i++) {
+      var x = ((spots[i][0] * w + now * 0.012 * (i + 1)) % (w + 140)) - 70;
+      cloud(ctx, x, spots[i][1] * Math.min(h, 680), spots[i][2]);
+    }
+  }
+
+  function eave(ctx, x, y, w, rise) {
+    ctx.beginPath();
+    ctx.moveTo(x - w * 0.08, y);
+    ctx.quadraticCurveTo(x + w * 0.5, y - rise, x + w * 1.08, y);
+    ctx.lineTo(x + w, y + rise * 0.15);
+    ctx.lineTo(x, y + rise * 0.15);
+    ctx.fill();
+  }
+
+  function windows(ctx, x, y, w, h) {
+    ctx.fillStyle = "#d8fbff";
+    var cols = Math.max(1, Math.floor(w / 18));
+    var rows = Math.max(1, Math.floor(h / 22));
+    for (var r = 0; r < rows; r++) {
+      for (var c = 0; c < cols; c++) {
+        if ((r + c) % 2 === 0) continue;
+        ctx.fillRect(x + 6 + c * ((w - 10) / cols), y + 8 + r * ((h - 12) / rows), 6, 8);
+      }
+    }
+  }
+
+  function keep(ctx, x, base, w, h) {
+    ctx.fillStyle = "#146888";
+    var tier = h * 0.42;
+    ctx.fillRect(x, base - tier, w, tier);
+    eave(ctx, x, base - tier, w, 16);
+    var w2 = w * 0.62;
+    var x2 = x + (w - w2) / 2;
+    ctx.fillRect(x2, base - tier - h * 0.28, w2, h * 0.28);
+    eave(ctx, x2, base - tier - h * 0.28, w2, 12);
+    var w3 = w * 0.28;
+    var x3 = x + (w - w3) / 2;
+    ctx.fillRect(x3, base - h, w3, h * 0.22);
+    eave(ctx, x3 - 2, base - h, w3 + 4, 10);
+    windows(ctx, x + 4, base - tier + 8, w - 8, tier - 16);
+  }
+
+  function pagoda(ctx, x, base, w, h) {
+    ctx.fillStyle = "#146888";
+    for (var i = 0; i < 3; i++) {
+      var tw = w * (1 - i * 0.22);
+      var tx = x + (w - tw) / 2;
+      var ty = base - h * (0.28 + i * 0.24);
+      ctx.fillRect(tx, ty, tw, h * 0.22);
+      eave(ctx, tx, ty, tw, 10);
+    }
+  }
+
+  function house(ctx, x, base, w, h) {
+    ctx.fillStyle = "#187898";
+    ctx.fillRect(x, base - h * 0.72, w, h * 0.72);
+    ctx.beginPath();
+    ctx.moveTo(x - w * 0.08, base - h * 0.72);
+    ctx.lineTo(x + w * 0.5, base - h);
+    ctx.lineTo(x + w * 1.08, base - h * 0.72);
+    ctx.fill();
+    windows(ctx, x, base - h * 0.7, w, h * 0.6);
+  }
+
+  function town(ctx, base, w) {
+    ctx.fillStyle = "#1c86a6";
+    ctx.beginPath();
+    ctx.moveTo(0, base);
+    ctx.lineTo(0, base - 18);
+    ctx.quadraticCurveTo(w * 0.25, base - 36, w * 0.5, base - 16);
+    ctx.quadraticCurveTo(w * 0.75, base - 40, w, base - 14);
+    ctx.lineTo(w, base);
+    ctx.fill();
+    var unit = Math.max(48, Math.min(92, w * 0.14));
+    house(ctx, w * 0.02, base, w * 0.12, unit * 0.7);
+    house(ctx, w * 0.12, base, w * 0.1, unit * 0.85);
+    pagoda(ctx, w * 0.22, base, w * 0.1, unit * 1.15);
+    keep(ctx, w * 0.34, base, w * 0.22, unit * 1.25);
+    house(ctx, w * 0.58, base, w * 0.12, unit * 0.75);
+    ctx.fillStyle = "#146888";
+    ctx.fillRect(w * 0.72, base - unit * 0.95, w * 0.06, unit * 0.95);
+    eave(ctx, w * 0.7, base - unit * 0.95, w * 0.1, 12);
+    house(ctx, w * 0.8, base, w * 0.16, unit * 0.62);
+    ctx.fillStyle = "#146888";
+    var tx = w * 0.9;
+    var th = unit * 0.7;
+    ctx.fillRect(tx, base - th * 0.75, th * 0.08, th * 0.75);
+    ctx.fillRect(tx + th * 0.55, base - th * 0.75, th * 0.08, th * 0.75);
+    ctx.fillRect(tx - th * 0.08, base - th * 0.82, th * 0.8, th * 0.08);
+    ctx.fillRect(tx, base - th, th * 0.64, th * 0.07);
+  }
+
+  function bricks(ctx, x, y, w, h, framed) {
+    ctx.save();
+    ctx.beginPath();
+    ctx.rect(x, y, w, h);
+    ctx.clip();
+    ctx.fillStyle = "#c5cbd3";
+    ctx.fillRect(x, y, w, h);
+    ctx.strokeStyle = "#8e969f";
+    ctx.lineWidth = 1;
+    var bw = 16;
+    var bh = 9;
+    var row0 = Math.floor(y / bh) - 1;
+    var row1 = Math.floor((y + h) / bh) + 1;
+    for (var row = row0; row <= row1; row++) {
+      var yy = row * bh;
+      var off = (row % 2) ? bw / 2 : 0;
+      for (var xx = x - bw; xx < x + w + bw; xx += bw) {
+        ctx.strokeRect(xx + off, yy, bw, bh);
+      }
+    }
+    ctx.restore();
+    ctx.fillStyle = "#aeb6bf";
+    ctx.fillRect(x, y, w, 4);
+    if (framed) {
+      ctx.strokeStyle = INK;
+      ctx.lineWidth = 2.5;
+      ctx.strokeRect(x + 1, y + 1, w - 2, h - 2);
+    } else {
+      ctx.strokeStyle = INK;
+      ctx.lineWidth = 3;
+      ctx.beginPath();
+      ctx.moveTo(x, y + 1.5);
+      ctx.lineTo(x + w, y + 1.5);
+      ctx.stroke();
+    }
+  }
+
+  function wood(ctx, x, y, w, h, mover) {
+    ctx.fillStyle = mover ? "#ff9a2e" : "#f08a2a";
+    roundRect(ctx, x, y, w, h, 3);
+    fillStroke(ctx, Math.min(w, h, 40));
+    ctx.strokeStyle = "rgba(120, 48, 10, 0.35)";
+    ctx.lineWidth = 1.5;
+    ctx.beginPath();
+    if (w >= h) {
+      ctx.moveTo(x + 4, y + h / 2);
+      ctx.lineTo(x + w - 4, y + h / 2);
+    } else {
+      ctx.moveTo(x + w / 2, y + 4);
+      ctx.lineTo(x + w / 2, y + h - 4);
+    }
+    ctx.stroke();
+    if (mover) {
+      ctx.fillStyle = "#fff6df";
+      ctx.beginPath();
+      ctx.moveTo(x + w * 0.35, y + 3);
+      ctx.lineTo(x + w * 0.48, y + h / 2);
+      ctx.lineTo(x + w * 0.35, y + h - 3);
+      ctx.fill();
+    }
+  }
+
+  function drawSolid(ctx, cam, solid) {
+    if (solid.kind === "bounce") return;
+    if (solid.kind === "stone" && solid.w >= 300 && solid.y >= 590) return;
+    var p = world(cam, solid.x, solid.y);
+    var w = solid.w * cam.s;
+    var h = solid.h * cam.s;
+    if (w < 1 || h < 1) return;
+    if (solid.kind === "spring") {
+      ctx.strokeStyle = INK;
+      ctx.lineWidth = 5;
+      ctx.beginPath();
+      ctx.moveTo(p.x, p.y + h);
+      for (var i = 0; i < 4; i++) ctx.lineTo(p.x + (i % 2 ? w : 0), p.y + h - (i + 1) * (h / 4));
+      ctx.stroke();
+      ctx.strokeStyle = "#f08a2a";
+      ctx.lineWidth = 2.5;
+      ctx.stroke();
+      ctx.fillStyle = "#ffd15a";
+      roundRect(ctx, p.x - 2, p.y, w + 4, 6, 2);
+      fillStroke(ctx, 20);
+      return;
+    }
+    if (solid.kind === "mirror") {
+      ctx.fillStyle = "#e2b34a";
+      ctx.fillRect(p.x, p.y, w, h);
+      ctx.fillStyle = "#e7fbff";
+      ctx.fillRect(p.x + 4, p.y + 3, Math.max(2, w - 8), Math.max(2, h - 6));
+      ctx.strokeStyle = INK;
+      ctx.lineWidth = 2.5;
+      ctx.strokeRect(p.x, p.y, w, h);
+      return;
+    }
+    if (solid.kind === "crate") {
+      wood(ctx, p.x, p.y, w, h, false);
+      ctx.strokeStyle = INK;
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      ctx.moveTo(p.x + 4, p.y + 4);
+      ctx.lineTo(p.x + w - 4, p.y + h - 4);
+      ctx.moveTo(p.x + w - 4, p.y + 4);
+      ctx.lineTo(p.x + 4, p.y + h - 4);
+      ctx.stroke();
+      return;
+    }
+    if (solid.kind === "wood" || solid.kind === "mover") {
+      wood(ctx, p.x, p.y, w, h, solid.kind === "mover");
+      return;
+    }
+    if (solid.kind === "bamboo") {
+      ctx.fillStyle = "#3aaa55";
+      var step = Math.max(7, w / 3);
+      for (var bx = 0; bx < w - 2; bx += step) {
+        roundRect(ctx, p.x + bx, p.y, Math.min(5, w), h, 2);
+        fillStroke(ctx, 18);
+        ctx.strokeStyle = "#1d6b32";
+        ctx.beginPath();
+        ctx.moveTo(p.x + bx, p.y + h * 0.35);
+        ctx.lineTo(p.x + bx + Math.min(5, w), p.y + h * 0.35);
+        ctx.moveTo(p.x + bx, p.y + h * 0.7);
+        ctx.lineTo(p.x + bx + Math.min(5, w), p.y + h * 0.7);
+        ctx.stroke();
+      }
+      return;
+    }
+    if (solid.kind === "thorn") {
+      ctx.fillStyle = "#e24b55";
+      ctx.beginPath();
+      var spikes = Math.max(2, Math.floor(w / 10));
+      ctx.moveTo(p.x, p.y + h);
+      for (var s = 0; s < spikes; s++) {
+        ctx.lineTo(p.x + (s + 0.5) * (w / spikes), p.y);
+        ctx.lineTo(p.x + (s + 1) * (w / spikes), p.y + h);
+      }
+      ctx.closePath();
+      fillStroke(ctx, 24);
+      return;
+    }
+    if (solid.kind === "shield") {
+      ctx.fillStyle = "#d5dbe3";
+      roundRect(ctx, p.x, p.y, w, h, 5);
+      fillStroke(ctx, 24);
+      ctx.strokeStyle = "#8ea0b4";
+      ctx.lineWidth = 2;
+      ctx.strokeRect(p.x + 3, p.y + 3, w - 6, h - 6);
+      return;
+    }
+    bricks(ctx, p.x, p.y, w, h, true);
+  }
+
+  function drawLaser(ctx, cam, path) {
+    if (!path || path.points.length < 2) return;
+    ctx.save();
+    ctx.lineCap = "round";
+    ctx.lineJoin = "round";
+    ctx.beginPath();
+    var p0 = world(cam, path.points[0].x, path.points[0].y);
+    ctx.moveTo(p0.x, p0.y);
+    for (var i = 1; i < path.points.length; i++) {
+      var p = world(cam, path.points[i].x, path.points[i].y);
+      ctx.lineTo(p.x, p.y);
+    }
+    ctx.strokeStyle = "rgba(255, 40, 48, 0.28)";
+    ctx.lineWidth = 10;
+    ctx.stroke();
+    ctx.strokeStyle = "#ff2d2d";
+    ctx.lineWidth = 3;
+    ctx.stroke();
+    var last = path.points[path.points.length - 1];
+    var end = world(cam, last.x, last.y);
+    ctx.fillStyle = "#fff";
+    ctx.beginPath();
+    ctx.arc(end.x, end.y, 4.5, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.fillStyle = "#ff2d2d";
+    ctx.beginPath();
+    ctx.arc(end.x, end.y, 2.4, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.restore();
+  }
+
+  function drawWind(ctx, cam, box, now) {
+    var p = world(cam, box.x, box.y);
+    ctx.fillStyle = "rgba(255,255,255,0.16)";
+    ctx.fillRect(p.x, p.y, box.w * cam.s, box.h * cam.s);
+    ctx.strokeStyle = "rgba(255,255,255,0.85)";
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    for (var i = 0; i < 3; i++) {
+      var yy = p.y + ((now / 12 + i * 28) % (box.h * cam.s));
+      ctx.moveTo(p.x + 8, yy);
+      ctx.lineTo(p.x + box.w * cam.s - 8, yy - 8);
+    }
+    ctx.stroke();
+  }
+
+  function drawShot(ctx, cam, kind, x, y) {
+    var p = world(cam, x, y);
+    if (kind === "fireball") {
+      ctx.fillStyle = "#ff8a1e";
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, 9, 0, Math.PI * 2);
+      fillStroke(ctx, 20);
+      ctx.fillStyle = "#fff1b0";
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, 4, 0, Math.PI * 2);
+      ctx.fill();
+      return;
+    }
+    if (kind === "bullet") {
+      ctx.save();
+      ctx.translate(p.x, p.y);
+      ctx.rotate(0.4);
+      ctx.fillStyle = "#f4e2a8";
+      roundRect(ctx, -8, -3, 16, 6, 3);
+      fillStroke(ctx, 16);
+      ctx.restore();
+      return;
+    }
+    ctx.save();
+    ctx.translate(p.x, p.y);
+    ctx.rotate(0.7);
+    ctx.fillStyle = "#f4e7c8";
+    ctx.fillRect(-9, -1.5, 14, 3);
+    ctx.fillStyle = "#e23b3b";
+    ctx.beginPath();
+    ctx.moveTo(8, 0);
+    ctx.lineTo(2, -4);
+    ctx.lineTo(2, 4);
+    ctx.closePath();
+    fillStroke(ctx, 16);
+    ctx.restore();
+  }
+
+  function badge(ctx, x, y, n, scale) {
+    var r = Math.max(20, 30 * Math.max(0.7, scale));
+    ctx.save();
+    ctx.translate(x, y);
+    ctx.fillStyle = "#fff";
+    ctx.beginPath();
+    ctx.arc(0, 0, r, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.lineWidth = Math.max(3, r * 0.12);
+    ctx.strokeStyle = INK;
+    ctx.stroke();
+    ctx.fillStyle = INK;
+    ctx.font = "800 " + Math.floor(r * 1.05) + "px Inter, 'Liberation Sans', sans-serif";
+    ctx.textAlign = "center";
+    ctx.textBaseline = "middle";
+    ctx.fillText(String(n), 0, r * 0.06);
+    ctx.restore();
+  }
+
+  function drawGround(ctx, w, h, floorY, pit) {
+    if (pit) {
+      var g = ctx.createLinearGradient(0, floorY, 0, h);
+      g.addColorStop(0, "#145e72");
+      g.addColorStop(1, "#0c3e4e");
+      ctx.fillStyle = g;
+      ctx.fillRect(0, floorY, w, h - floorY + 4);
+      return;
+    }
+    bricks(ctx, 0, floorY, w, Math.max(8, h - floorY + 4), false);
+  }
+
+  function skinFor(kind) {
+    if (kind === "fireball") return "#2fa35a";
+    if (kind === "bullet") return "#3d62e0";
+    return "#ef4b3f";
+  }
+
+  function drawWorld(ctx, state, cam, now) {
+    var s = 58 * cam.s;
+    (state.level.winds || []).forEach(function (box) { drawWind(ctx, cam, box, now); });
+    state.solids.forEach(function (solid) { drawSolid(ctx, cam, solid); });
+    if (state.path && !state.fired && state.phase === "live" && state.status === "play") drawLaser(ctx, cam, state.path);
+    state.coins.forEach(function (c) {
+      if (c.got) return;
+      var p = world(cam, c.x, c.y);
+      ctx.fillStyle = "#ffbf1f";
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, 8, 0, Math.PI * 2);
+      fillStroke(ctx, 16);
+      ctx.strokeStyle = "#a86a00";
+      ctx.lineWidth = 1.4;
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, 4, 0, Math.PI * 2);
+      ctx.stroke();
+    });
+    var princess = NinjaEngine.princessAt(state);
+    var pPose = "panic";
+    if (state.princess.loose || state.status === "lost") pPose = "tumble";
+    else if (state.phase === "hug" || state.status === "won" || state.phase === "tumble") pPose = "jump";
+    var shot = state.level.shots[state.shotIndex] || state.level.shots[0];
+    var pFace = shot && shot.x < princess.x ? -1 : 1;
+    if (pPose === "jump") pFace = state.ninja.x < princess.x ? -1 : 1;
+    var pp = world(cam, princess.x, princess.y + NinjaEngine.R);
+    drawPrincess(ctx, pp.x, pp.y, s, now, {
+      pose: pPose,
+      facing: pFace,
+      spin: pPose === "tumble" ? state.princess.spin : 0,
+    });
+    state.onis.forEach(function (oni, index) {
+      var spec = state.level.shots[index];
+      var down = !!oni.down;
+      var active = index === state.shotIndex && !down;
+      var pose = down ? "tumble" : "angry";
+      var pt = world(cam, oni.x, oni.y + 34);
+      ctx.save();
+      ctx.globalAlpha = down ? 0.9 : active ? 1 : 0.42;
+      drawOni(ctx, pt.x, pt.y, s * 0.92, now, {
+        pose: pose,
+        facing: princess.x >= oni.x ? 1 : -1,
+        spin: pose === "tumble" ? oni.spin : 0,
+        skin: skinFor(spec.kind),
+        weapon: spec.kind,
+      });
+      ctx.restore();
+    });
+    (state.crates || []).forEach(function (box) {
+      if (!box.alive) return;
+      drawSolid(ctx, cam, { x: box.x, y: box.y, w: box.w, h: box.h, kind: "crate" });
+    });
+    (state.lanterns || []).forEach(function (lamp) {
+      var lp = world(cam, lamp.x, lamp.y);
+      if (lamp.hung) {
+        ctx.strokeStyle = INK;
+        ctx.lineWidth = 1.5;
+        ctx.beginPath();
+        ctx.moveTo(lp.x, lp.y - 26 * cam.s);
+        ctx.lineTo(lp.x, lp.y - 8);
+        ctx.stroke();
+      }
+      ctx.fillStyle = "#ff5a3c";
+      roundRect(ctx, lp.x - 8, lp.y - 10, 16, 18, 4);
+      fillStroke(ctx, 16);
+      ctx.fillStyle = "#ffe08a";
+      ctx.fillRect(lp.x - 3, lp.y - 3, 6, 7);
+    });
+    var n = state.ninja;
+    var nPose = "cool";
+    if (state.phase === "hug" || state.status === "won") nPose = "jump";
+    else if (state.launched && (state.phase === "tumble" || Math.hypot(n.vx, n.vy) > 30)) nPose = "tumble";
+    var nFace = nPose === "tumble" ? (n.vx < 0 ? -1 : 1) : (princess.x >= n.x ? 1 : -1);
+    var np = world(cam, n.x, n.y + NinjaEngine.R);
+    drawNinja(ctx, np.x, np.y, s * 0.96, now, {
+      pose: nPose,
+      facing: nFace,
+      spin: nPose === "tumble" ? n.spin : 0,
+    });
+    if (state.preview && state.preview.length) {
+      for (var i = 0; i < state.preview.length; i += 2) {
+        var d = world(cam, state.preview[i].x, state.preview[i].y);
+        ctx.fillStyle = "#fff";
+        ctx.beginPath();
+        ctx.arc(d.x, d.y, 3.3, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.strokeStyle = INK;
+        ctx.lineWidth = 1.4;
+        ctx.stroke();
+      }
+    }
+    if (state.bullet) {
+      var bp = NinjaEngine.bulletPosition(state);
+      if (bp) drawShot(ctx, cam, state.bullet.kind, bp.x, bp.y);
+    }
+    if (state.phase === "live" && !state.fired && state.status === "play") {
+      var num = Math.ceil(state.countdown);
+      if (num > 0 && num < 10 && shot) {
+        var side = shot.x > princess.x ? -1 : 1;
+        var bp2 = world(cam, princess.x + side * 78, princess.y - 46);
+        if (bp2.y < 78) bp2.y = 78;
+        var frac = state.countdown - Math.floor(state.countdown);
+        var pop = 1 + Math.max(0, 0.12 - frac) * 0.8;
+        badge(ctx, bp2.x, bp2.y, num, cam.s * pop);
+      }
+    }
+  }
+
+  function titleScene(ctx, w, h, now) {
+    var ground = Math.min(h * 0.66, h - 210);
+    town(ctx, ground, w);
+    drawGround(ctx, w, h, ground, false);
+    var s = Math.max(78, Math.min(w, h) * 0.2);
+    var oniX = w * 0.2;
+    var ninjaX = w * 0.48;
+    var princessX = w * 0.76;
+    ctx.strokeStyle = "rgba(255, 40, 48, 0.25)";
+    ctx.lineWidth = 10;
+    ctx.lineCap = "round";
+    ctx.beginPath();
+    ctx.moveTo(oniX + 20, ground - s * 0.55);
+    ctx.lineTo(princessX - 10, ground - s * 0.7);
+    ctx.stroke();
+    ctx.strokeStyle = "#ff2d2d";
+    ctx.lineWidth = 3;
+    ctx.stroke();
+    drawOni(ctx, oniX, ground, s * 0.82, now, { pose: "angry", facing: 1, skin: "#ef4b3f", weapon: "bullet" });
+    drawNinja(ctx, ninjaX, ground, s, now, { pose: "cool", facing: 1 });
+    drawPrincess(ctx, princessX, ground, s * 0.96, now, { pose: "panic", facing: -1 });
+    badge(ctx, princessX - s * 0.55, ground - s * 1.15, 3, 1.15);
+  }
+
+  function wreath(ctx, w, h) {
+    var cx = w / 2;
+    var cy = h * 0.4;
+    var rx = w * 0.4;
+    var ry = h * 0.2;
+    var wings = [[Math.PI * 1.04, Math.PI * 1.3], [Math.PI * 1.7, Math.PI * 1.96]];
+    for (var wing = 0; wing < wings.length; wing++) {
+      for (var i = 0; i < 5; i++) {
+        var t = i / 4;
+        var a = wings[wing][0] + (wings[wing][1] - wings[wing][0]) * t;
+        var x = cx + Math.cos(a) * rx;
+        var y = cy + Math.sin(a) * ry;
+        ctx.save();
+        ctx.translate(x, y);
+        ctx.rotate(a);
+        ctx.fillStyle = i % 2 ? "#3cba58" : "#217a38";
+        ctx.beginPath();
+        ctx.ellipse(0, 0, Math.max(15, w * 0.04), Math.max(8, w * 0.02), 0.5, 0, Math.PI * 2);
+        fillStroke(ctx, 18);
+        ctx.fillStyle = i % 2 ? "#217a38" : "#3cba58";
+        ctx.beginPath();
+        ctx.ellipse(0, 0, Math.max(13, w * 0.034), Math.max(7, w * 0.016), -0.6, 0, Math.PI * 2);
+        fillStroke(ctx, 18);
+        ctx.restore();
+      }
+    }
+  }
+
+  function drawCheer(ctx, w, h, now) {
+    ctx.clearRect(0, 0, w, h);
+    var cx = w / 2;
+    var colors = ["#ff4d5e", "#ff9a2e", "#ffe14a", "#3dce67", "#3aa6ff"];
+    for (var i = 0; i < colors.length; i++) {
+      ctx.strokeStyle = colors[i];
+      ctx.lineWidth = Math.max(6, h * 0.028);
+      ctx.beginPath();
+      ctx.arc(cx, h * 0.42, h * 0.34 - i * (h * 0.03), Math.PI * 1.12, Math.PI * 1.88);
+      ctx.stroke();
+    }
+    wreath(ctx, w, h);
+    var s = h * 0.4;
+    var gy = h * 0.96;
+    drawPrincess(ctx, cx + s * 0.34, gy, s * 0.96, now, { pose: "hug", facing: -1 });
+    drawNinja(ctx, cx - s * 0.3, gy, s, now, { pose: "hug", facing: 1 });
+  }
+
+  function draw(ctx, w, h, view) {
+    var now = view.now || 0;
+    sky(ctx, w, h);
+    clouds(ctx, w, h, now);
+    ctx.fillStyle = "#fff6c2";
+    ctx.beginPath();
+    ctx.arc(w * 0.56, Math.max(150, h * 0.2), 28, 0, Math.PI * 2);
+    fillStroke(ctx, 24);
+    if (view.screen === "play" && view.state && view.cam) {
+      var shakeX = ((now / 30 | 0) % 2 ? 1 : -1) * (shake / 2);
+      var shakeY = ((now / 40 | 0) % 2 ? 1 : -1) * (shake / 3);
+      if (shake > 0) shake *= 0.86;
+      ctx.save();
+      ctx.translate(shakeX, shakeY);
+      var floorY = view.cam.y + 598 * view.cam.s;
+      town(ctx, floorY, w);
+      drawGround(ctx, w, h, floorY, !!view.state.level.pit);
+      drawWorld(ctx, view.state, view.cam, now);
+      ctx.restore();
+    } else {
+      titleScene(ctx, w, h, now);
+      if (view.screen === "select" || view.screen === "how") {
+        ctx.fillStyle = "rgba(255,255,255,0.5)";
+        ctx.fillRect(0, 0, w, h);
+      }
+    }
+  }
+
+  window.NinjaRender = { draw: draw, drawCheer: drawCheer, note: note, reset: reset };
+})();
+</script>
+<script>
+/* Screens, aiming, and the portrait loop for 忍者護公主. */
+(function () {
+  "use strict";
+
+  var KEY = "ninja-guard-v1";
+  var REASONS = {
+    arrow: "箭射中了公主。",
+    bullet: "子彈打中了公主。",
+    fireball: "火球燒到了公主。",
+    thorn: "公主掉進尖刺了。",
+    fall: "公主摔下城樓了。",
+    "ninja-thorn": "忍者撞上尖刺了。",
+  };
+
+  var canvas = document.getElementById("cv");
+  var ctx = canvas.getContext("2d");
+  var screen = "title";
+  var state = null;
+  var save = loadSave();
+  var cssW = 1;
+  var cssH = 1;
+  var cam = null;
+  var simAt = 0;
+  var modalToken = 0;
+  var noted = "";
+  var resetArmed = false;
+  var dragging = false;
+
+  NinjaAudio.setMuted(!!save.mute);
+  syncMute();
+  syncWallet();
+
+  function loadSave() {
+    try {
+      var raw = localStorage.getItem(KEY);
+      if (!raw) return { stars: {}, mute: false, coins: 0 };
+      var data = JSON.parse(raw);
+      if (!data || typeof data !== "object") return { stars: {}, mute: false, coins: 0 };
+      if (!data.stars) data.stars = {};
+      if (typeof data.coins !== "number" || !isFinite(data.coins) || data.coins < 0) data.coins = 0;
+      data.mute = !!data.mute;
+      return data;
+    } catch (err) {
+      return { stars: {}, mute: false, coins: 0 };
+    }
+  }
+
+  function persist() {
+    try { localStorage.setItem(KEY, JSON.stringify(save)); } catch (err) {}
+  }
+
+  function isUnlocked(id) { return id === 1 || (save.stars[id - 1] || 0) > 0; }
+
+  function clearedCount() {
+    var n = 0;
+    NINJA_LEVELS.forEach(function (level) { if (save.stars[level.id] > 0) n++; });
+    return n;
+  }
+
+  function starSum() {
+    var n = 0;
+    NINJA_LEVELS.forEach(function (level) { n += save.stars[level.id] || 0; });
+    return n;
+  }
+
+  function nextUncleared() {
+    for (var i = 0; i < NINJA_LEVELS.length; i++) {
+      if (!(save.stars[NINJA_LEVELS[i].id] > 0)) return NINJA_LEVELS[i].id;
+    }
+    return 1;
+  }
+
+  function rewardFor(game) {
+    var stars = NinjaEngine.starsFor(game);
+    return 20 + stars * 20 + (game.coinsGot || 0) * 10;
+  }
+
+  function syncWallet() {
+    var text = String(save.coins || 0);
+    document.getElementById("coin-total").textContent = text;
+    document.getElementById("win-total").textContent = text;
+    var modalOpen = !document.getElementById("modal").classList.contains("hidden");
+    document.getElementById("wallet").classList.toggle("hidden", modalOpen || screen === "how");
+    if (screen === "play") {
+      document.getElementById("hud").classList.toggle("hidden", modalOpen);
+      document.getElementById("dock").classList.toggle("hidden", modalOpen);
+    }
+  }
+
+  function show(name) {
+    screen = name;
+    ["title", "how", "select"].forEach(function (id) {
+      document.getElementById("screen-" + id).classList.toggle("hidden", id !== name);
+    });
+    document.getElementById("hud").classList.toggle("hidden", name !== "play");
+    document.getElementById("dock").classList.toggle("hidden", name !== "play");
+    document.getElementById("modal").classList.add("hidden");
+    document.getElementById("modal-win").classList.add("hidden");
+    document.getElementById("modal-lose").classList.add("hidden");
+    if (name === "title") {
+      document.getElementById("btn-start").setAttribute("aria-label", clearedCount() ? "繼續守護" : "開始守護");
+    }
+    if (name === "select") buildSelect();
+    syncWallet();
+  }
+
+  function starGlyphs(n) {
+    var text = "";
+    for (var i = 1; i <= 3; i++) text += i <= n ? "★" : "☆";
+    return text;
+  }
+
+  function buildSelect() {
+    document.getElementById("select-meta").textContent =
+      "已守護 " + clearedCount() + "／" + NINJA_LEVELS.length + "　" + starSum() + " 星　金幣 " + (save.coins || 0);
+    var grid = document.getElementById("level-grid");
+    grid.innerHTML = "";
+    NINJA_LEVELS.forEach(function (level) {
+      var open = isUnlocked(level.id);
+      var stars = save.stars[level.id] || 0;
+      var btn = document.createElement("button");
+      btn.type = "button";
+      btn.className = "card" + (open ? "" : " locked") + (stars ? " cleared" : "");
+      btn.disabled = !open;
+      btn.innerHTML = '<span class="num">' + level.id + '</span><span class="lname">' + level.name + '</span><span class="stars">' + (open ? starGlyphs(stars) : "尚未解鎖") + "</span>";
+      btn.addEventListener("click", function () {
+        if (!open) return;
+        NinjaAudio.unlock();
+        NinjaAudio.ui();
+        startLevel(level.id);
+      });
+      grid.appendChild(btn);
+    });
+    document.getElementById("btn-reset").textContent = "清除進度";
+    resetArmed = false;
+  }
+
+  function startLevel(id) {
+    var level = null;
+    for (var i = 0; i < NINJA_LEVELS.length; i++) if (NINJA_LEVELS[i].id === id) level = NINJA_LEVELS[i];
+    if (!level || !isUnlocked(id)) return;
+    state = NinjaEngine.create(level);
+    NinjaRender.reset();
+    modalToken++;
+    noted = "";
+    dragging = false;
+    document.getElementById("level-num").textContent = String(id);
+    document.getElementById("hud-name").textContent = level.name;
+    document.getElementById("hint").textContent = level.hint;
+    simAt = performance.now();
+    show("play");
+    updateCoins();
+  }
+
+  function updateCoins() {
+    if (!state) return;
+    document.getElementById("coin-count").textContent = "本關 " + state.coinsGot + "／" + state.coins.length;
+  }
+
+  function syncMute() {
+    var muted = !!save.mute;
+    document.querySelectorAll(".mute-btn").forEach(function (btn) {
+      btn.setAttribute("aria-pressed", muted ? "true" : "false");
+      btn.setAttribute("aria-label", muted ? "打開聲音" : "關閉聲音");
+      if (btn.classList.contains("text-link") || btn.classList.contains("text-btn")) {
+        btn.textContent = muted ? "靜音" : "聲音";
+      }
+    });
+    NinjaAudio.setMuted(muted);
+  }
+
+  function toggleMute() {
+    NinjaAudio.unlock();
+    save.mute = !save.mute;
+    persist();
+    syncMute();
+    if (!save.mute) NinjaAudio.ui();
+  }
+
+  function consume() {
+    if (!state || !state.events.length) return;
+    var evs = state.events.splice(0, state.events.length);
+    for (var i = 0; i < evs.length; i++) {
+      var ev = evs[i];
+      NinjaRender.note(ev);
+      if (ev.t === "beep") NinjaAudio.beep(ev.n);
+      else if (ev.t === "throw") NinjaAudio.throw();
+      else if (ev.t === "fire") NinjaAudio.fire(ev.kind);
+      else if (ev.t === "block" || ev.t === "ram") NinjaAudio.block();
+      else if (ev.t === "coin") NinjaAudio.coin();
+      else if (ev.t === "lose") NinjaAudio.lose();
+      else if (ev.t === "win") NinjaAudio.win();
+    }
+    updateCoins();
+  }
+
+  function maybeModal() {
+    if (!state || (state.status !== "won" && state.status !== "lost")) return;
+    var key = state.status + ":" + state.level.id + ":" + state.shotIndex;
+    if (noted === key) return;
+    noted = key;
+    var token = ++modalToken;
+    var status = state.status;
+    setTimeout(function () {
+      if (token !== modalToken || !state || state.status !== status || screen !== "play") return;
+      if (status === "won") showWin();
+      else showLose();
+    }, 700);
+  }
+
+  function starsHTML(n) {
+    var html = "";
+    for (var i = 1; i <= 3; i++) html += '<span class="' + (i <= n ? "on" : "") + '">★</span>';
+    return html;
+  }
+
+  function showWin() {
+    var stars = NinjaEngine.starsFor(state);
+    if (stars > (save.stars[state.level.id] || 0)) save.stars[state.level.id] = stars;
+    if (!state.paid) {
+      state.paid = true;
+      save.coins = (save.coins || 0) + rewardFor(state);
+    }
+    persist();
+    document.getElementById("modal-stars").innerHTML = starsHTML(stars);
+    document.getElementById("reward-amt").textContent = "+" + rewardFor(state);
+    var claim = document.getElementById("modal-claim");
+    claim.textContent = "領取";
+    claim.classList.remove("claimed");
+    claim.disabled = false;
+    var next = document.getElementById("modal-next");
+    next.textContent = state.level.id >= NINJA_LEVELS.length ? "回到關卡" : "下一關";
+    document.getElementById("modal-lose").classList.add("hidden");
+    document.getElementById("modal-win").classList.remove("hidden");
+    document.getElementById("modal").classList.remove("hidden");
+    syncWallet();
+  }
+
+  function showLose() {
+    document.getElementById("modal-title").textContent = "沒擋住";
+    document.getElementById("modal-text").textContent = REASONS[state.reason] || "沒能擋下這一發。";
+    document.getElementById("modal-win").classList.add("hidden");
+    document.getElementById("modal-lose").classList.remove("hidden");
+    document.getElementById("modal").classList.remove("hidden");
+    syncWallet();
+  }
+
+  function computeCam() {
+    if (screen !== "play" || !state) return null;
+    var bot = document.getElementById("dock").offsetHeight || 72;
+    var availW = cssW;
+    var availH = Math.max(40, cssH - bot);
+    var s = Math.min(availW / NinjaEngine.W, availH / NinjaEngine.H);
+    return {
+      s: s,
+      x: (cssW - NinjaEngine.W * s) / 2,
+      y: (availH - NinjaEngine.H * s) / 2,
+    };
+  }
+
+  function resize() {
+    var frame = document.getElementById("frame");
+    cssW = frame.clientWidth || 1;
+    cssH = frame.clientHeight || 1;
+    var dpr = Math.min(window.devicePixelRatio || 1, 2);
+    canvas.width = Math.max(1, Math.floor(cssW * dpr));
+    canvas.height = Math.max(1, Math.floor(cssH * dpr));
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  }
+
+  function toWorld(e) {
+    if (!cam) return null;
+    var rect = canvas.getBoundingClientRect();
+    var x = ((e.clientX - rect.left) * cssW) / rect.width;
+    var y = ((e.clientY - rect.top) * cssH) / rect.height;
+    return { x: (x - cam.x) / cam.s, y: (y - cam.y) / cam.s };
+  }
+
+  function paintCheer(now) {
+    var box = document.getElementById("modal-win");
+    var c = document.getElementById("cheer");
+    if (!c || box.classList.contains("hidden")) return;
+    var w = c.clientWidth || 320;
+    var h = c.clientHeight || 240;
+    if (w < 2 || h < 2) return;
+    var dpr = Math.min(window.devicePixelRatio || 1, 2);
+    var pw = Math.floor(w * dpr);
+    var ph = Math.floor(h * dpr);
+    if (c.width !== pw || c.height !== ph) {
+      c.width = pw;
+      c.height = ph;
+    }
+    var g = c.getContext("2d");
+    g.setTransform(dpr, 0, 0, dpr, 0, 0);
+    NinjaRender.drawCheer(g, w, h, now);
+  }
+
+  canvas.addEventListener("pointerdown", function (e) {
+    NinjaAudio.unlock();
+    if (screen !== "play" || !state || state.status !== "play") return;
+    if (!document.getElementById("modal").classList.contains("hidden")) return;
+    var p = toWorld(e);
+    if (!p) return;
+    dragging = true;
+    NinjaEngine.setAim(state, p.x, p.y);
+    try { canvas.setPointerCapture(e.pointerId); } catch (err) {}
+    e.preventDefault();
+  });
+  canvas.addEventListener("pointermove", function (e) {
+    if (!dragging || !state) return;
+    var p = toWorld(e);
+    if (p) NinjaEngine.setAim(state, p.x, p.y);
+  });
+  function endDrag(e) {
+    if (!dragging) return;
+    dragging = false;
+    if (state && state.status === "play") {
+      var p = toWorld(e);
+      if (p) NinjaEngine.setAim(state, p.x, p.y);
+      NinjaEngine.release(state);
+      consume();
+    }
+  }
+  canvas.addEventListener("pointerup", endDrag);
+  canvas.addEventListener("pointercancel", function () { dragging = false; if (state) NinjaEngine.clearAim(state); });
+  canvas.addEventListener("contextmenu", function (e) { e.preventDefault(); });
+
+  document.getElementById("btn-start").addEventListener("click", function () {
+    NinjaAudio.unlock();
+    NinjaAudio.ui();
+    startLevel(nextUncleared());
+  });
+  document.getElementById("btn-levels").addEventListener("click", function () { NinjaAudio.unlock(); NinjaAudio.ui(); show("select"); });
+  document.getElementById("btn-how").addEventListener("click", function () { NinjaAudio.ui(); show("how"); });
+  document.getElementById("btn-how-back").addEventListener("click", function () { NinjaAudio.ui(); show("title"); });
+  document.getElementById("btn-select-back").addEventListener("click", function () { NinjaAudio.ui(); show("title"); });
+  document.getElementById("btn-back").addEventListener("click", function () { NinjaAudio.ui(); show("select"); });
+  document.getElementById("btn-retry").addEventListener("click", function () { if (state) { NinjaAudio.ui(); startLevel(state.level.id); } });
+  document.getElementById("btn-skip").addEventListener("click", function () {
+    if (!state || screen !== "play") return;
+    NinjaAudio.ui();
+    var id = state.level.id;
+    if (!(save.stars[id] > 0)) {
+      save.stars[id] = 1;
+      save.coins = (save.coins || 0) + 20;
+      persist();
+    }
+    if (id >= NINJA_LEVELS.length) show("select");
+    else startLevel(id + 1);
+  });
+  document.getElementById("frame").addEventListener("click", function (e) {
+    if (e.target.closest && e.target.closest(".mute-btn")) toggleMute();
+  });
+  function togglePop(id) {
+    document.getElementById(id).classList.toggle("hidden");
+  }
+  document.getElementById("btn-coin-plus").addEventListener("click", function (e) {
+    e.stopPropagation();
+    togglePop("coin-pop");
+  });
+  document.getElementById("btn-coin-plus-win").addEventListener("click", function (e) {
+    e.stopPropagation();
+    togglePop("coin-pop-win");
+  });
+  document.getElementById("btn-reset").addEventListener("click", function () {
+    var btn = document.getElementById("btn-reset");
+    if (!resetArmed) {
+      resetArmed = true;
+      btn.textContent = "再按一次就清除";
+      setTimeout(function () { if (!resetArmed) return; resetArmed = false; btn.textContent = "清除進度"; }, 2200);
+      return;
+    }
+    save = { stars: {}, mute: !!save.mute, coins: 0 };
+    persist();
+    resetArmed = false;
+    buildSelect();
+    syncWallet();
+  });
+  document.getElementById("modal-retry").addEventListener("click", function () { if (state) startLevel(state.level.id); });
+  document.getElementById("modal-levels").addEventListener("click", function () { show("select"); });
+  document.getElementById("btn-home").addEventListener("click", function () { NinjaAudio.ui(); show("title"); });
+  document.getElementById("modal-claim").addEventListener("click", function () {
+    var claim = document.getElementById("modal-claim");
+    if (claim.disabled) return;
+    NinjaAudio.coin();
+    claim.disabled = true;
+    claim.classList.add("claimed");
+    claim.textContent = "已領取";
+  });
+  document.getElementById("modal-next").addEventListener("click", function () {
+    if (!state || state.status !== "won") return;
+    if (state.level.id >= NINJA_LEVELS.length) show("select");
+    else startLevel(state.level.id + 1);
+  });
+
+  document.addEventListener("keydown", function (e) {
+    if (e.key === "m" || e.key === "M") toggleMute();
+    else if ((e.key === "r" || e.key === "R") && state && screen === "play") startLevel(state.level.id);
+    else if (e.key === "Escape") show(screen === "play" ? "select" : "title");
+  });
+
+  function loop(now) {
+    requestAnimationFrame(loop);
+    if (!simAt) simAt = now;
+    if (screen === "play" && state && state.status === "play") {
+      var dt = Math.min(0.05, (now - simAt) / 1000);
+      simAt = now;
+      NinjaEngine.step(state, dt);
+      consume();
+      maybeModal();
+    } else simAt = now;
+    cam = computeCam();
+    NinjaRender.draw(ctx, cssW, cssH, { screen: screen, state: state, cam: cam, now: now });
+    paintCheer(now);
+    if (screen === "play" && state) {
+      var hint = document.getElementById("hint");
+      if (state.status === "won") hint.textContent = "公主平安。";
+      else if (state.status === "lost") hint.textContent = "這一發沒擋住。";
+      else if (state.phase === "hug") hint.textContent = "擋下了。忍者回到公主身邊。";
+      else hint.textContent = state.level.hint;
+    }
+  }
+
+  window.addEventListener("resize", resize);
+  resize();
+  show("title");
+  requestAnimationFrame(loop);
+
+  window.__NINJA = {
+    start: startLevel,
+    launch: function (vx, vy) { if (state) { NinjaEngine.launch(state, vx, vy); consume(); } },
+    get state() { return state; },
+    get cam() { return cam; },
+    get save() { return save; },
+  };
+})();
+</script>
+</body>
+</html>
