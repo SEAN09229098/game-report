@@ -78,6 +78,9 @@ ul{padding-left:20px}li{margin:4px 0}
 .heat th{color:var(--text2);font-weight:500}
 .heat th:first-child,.heat td:first-child{text-align:left;white-space:nowrap;min-width:160px;color:var(--text2);background:transparent}
 .heat td{font-variant-numeric:tabular-nums}
+.evtTag{display:inline-block;margin-left:8px;padding:0 7px;border-radius:999px;font-size:11px;line-height:18px;font-weight:500;background:var(--warnbg);color:var(--warn);vertical-align:1px;white-space:nowrap}
+tr.evt td:first-child{box-shadow:inset 3px 0 0 var(--c1)}
+.evtNote{border-left:3px solid var(--c1);padding:6px 0 6px 10px;margin:10px 0}
 
 #kpiTbl td:first-child{min-width:170px}
 #stuckTbl td,#stuckTbl th{white-space:nowrap}
@@ -125,6 +128,7 @@ ul{padding-left:20px}li{margin:4px 0}
 <div class="seg" id="retMode"></div>
 <div class="card" id="retBox"></div>
 <p class="note">第 N 天留存是註冊後第 N 天有上線的比例，只計完整的日子，空白是還沒滿 N 天。顏色越深越好。</p>
+<p class="note evtNote"><b>備註：</b>11/17–11/30 PlayHorny 渠道有推出登入拿 HCoin 活動。表中 11/17–11/22 的註冊日都在活動期間內（左側橘色標線），這幾天的次日留存明顯跳高：11/17 70.0%、11/18 50.5%、11/19 75.8%、11/20 42.6%，而 11/10–11/16 每天只有 18.2%～27.8%。11/17–11/22 的 788 位新玩家中有 583 人來自 PlayHorny，這批玩家次日留存 71.7%，但每天只玩約 5.9 分鐘；不算 PlayHorny 的新玩家次日留存為 26.2%。這段留存上升很可能主要來自活動的登入獎勵，看留存時建議與其他渠道分開比較。</p>
 <h3 id="ret-combined">各伺服器、渠道的合併留存</h3>
 <div class="seg" id="retSegMode"></div>
 <div class="card" id="retSegBox"></div>
@@ -296,11 +300,14 @@ drawDayTbl();
 // retention heatmap / table
 function heatColor(v){if(v==null)return "transparent";var t=Math.min(1,Math.max(0,v/30));var dark=window.matchMedia&&window.matchMedia("(prefers-color-scheme: dark)").matches;var r,g,b;if(dark){r=Math.round(27+t*64);g=Math.round(40+t*103);b=Math.round(56+t*193);}else{r=Math.round(232+t*(47-232));g=Math.round(241+t*(111-241));b=Math.round(255+t*(237-255));}return "rgb("+r+","+g+","+b+")";}
 function heatText(v){if(v==null)return "inherit";var t=v/30;var dark=window.matchMedia&&window.matchMedia("(prefers-color-scheme: dark)").matches;if(!dark)return t>0.62?"#fff":"#16325c";return t<0.35?"#c5d4f0":"#0b1424";}
+var EVT_FROM="11-17",EVT_TO="11-30",EVT_TAG='<span class="evtTag">PlayHorny 登入拿 HCoin 活動起</span>';
+function inEvt(d){return d>=EVT_FROM&&d<=EVT_TO;}
 function renderRet(mode){
   if(mode==="heat"){var h='<table class="heat"><thead><tr><th>註冊日</th>'+RETC.map(function(c){return"<th>"+c+"</th>";}).join("")+"</tr></thead><tbody>";
-    RET.forEach(function(r){h+="<tr><td>2026-"+r[0]+"（"+r[1]+" 人）</td>";r.slice(2).forEach(function(v){h+='<td style="background:'+heatColor(v)+';color:'+heatText(v)+'">'+(v==null?"":v.toFixed(1)+"%")+"</td>";});h+="</tr>";});
+    RET.forEach(function(r){h+="<tr"+(inEvt(r[0])?' class="evt" title="PlayHorny 登入拿 HCoin 活動期間（11/17–11/30）"':"")+"><td>2026-"+r[0]+"（"+r[1]+" 人）"+(r[0]===EVT_FROM?EVT_TAG:"")+"</td>";r.slice(2).forEach(function(v){h+='<td style="background:'+heatColor(v)+';color:'+heatText(v)+'">'+(v==null?"":v.toFixed(1)+"%")+"</td>";});h+="</tr>";});
     $("retBox").innerHTML=h+"</tbody></table>";}
-  else {$("retBox").innerHTML="<table></table>";table($("retBox").querySelector("table"),[["註冊日","人數"].concat(RETC)].concat(RET.map(function(r){return ["2026-"+r[0],String(r[1])].concat(r.slice(2).map(function(v){return v==null?"":v.toFixed(1)+"%";}));})));}
+  else {$("retBox").innerHTML="<table></table>";table($("retBox").querySelector("table"),[["註冊日","人數"].concat(RETC)].concat(RET.map(function(r){return ["2026-"+r[0],String(r[1])].concat(r.slice(2).map(function(v){return v==null?"":v.toFixed(1)+"%";}));})));
+    $("retBox").querySelectorAll("tbody tr").forEach(function(tr,i){var d=RET[i][0];if(inEvt(d)){tr.classList.add("evt");tr.title="PlayHorny 登入拿 HCoin 活動期間（11/17–11/30）";if(d===EVT_FROM)tr.firstChild.insertAdjacentHTML("beforeend",EVT_TAG);}});}
 }
 seg($("retMode"),[{v:"heat",l:"熱力圖"},{v:"table",l:"數值表"}],"heat",renderRet);renderRet("heat");
 function renderRetSeg(mode){
