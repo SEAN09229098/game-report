@@ -298,8 +298,10 @@ drawDailyCharts();
 seg($("sortSeg"),[{v:"date",l:"依日期"},{v:"new",l:"新增由多到少"},{v:"active",l:"活躍由多到少"},{v:"returning",l:"老玩家由多到少"},{v:"revenue",l:"營收由多到少"},{v:"payers",l:"付費人數由多到少"}],"date",function(v){sortKey=v;drawDayTbl();});
 drawDayTbl();
 // retention heatmap / table
-function heatColor(v){if(v==null)return "transparent";var t=Math.min(1,Math.max(0,v/30));var dark=window.matchMedia&&window.matchMedia("(prefers-color-scheme: dark)").matches;var r,g,b;if(dark){r=Math.round(27+t*64);g=Math.round(40+t*103);b=Math.round(56+t*193);}else{r=Math.round(232+t*(47-232));g=Math.round(241+t*(111-241));b=Math.round(255+t*(237-255));}return "rgb("+r+","+g+","+b+")";}
-function heatText(v){if(v==null)return "inherit";var t=v/30;var dark=window.matchMedia&&window.matchMedia("(prefers-color-scheme: dark)").matches;if(!dark)return t>0.62?"#fff":"#16325c";return t<0.35?"#c5d4f0":"#0b1424";}
+function heatRGB(v){var t=Math.min(1,Math.max(0,v/30));var dark=window.matchMedia&&window.matchMedia("(prefers-color-scheme: dark)").matches;var S=dark?[[58,36,28],[176,84,34],[238,112,58]]:[[255,243,224],[247,150,62],[189,44,18]];var a=t<0.5?S[0]:S[1],b=t<0.5?S[1]:S[2],u=t<0.5?t*2:(t-0.5)*2;return [0,1,2].map(function(i){return Math.round(a[i]+u*(b[i]-a[i]));});}
+function heatColor(v){if(v==null)return "transparent";var c=heatRGB(v);return "rgb("+c[0]+","+c[1]+","+c[2]+")";}
+function heatLum(c){return c.map(function(x){x/=255;return x<=0.03928?x/12.92:Math.pow((x+0.055)/1.055,2.4);}).reduce(function(s,x,i){return s+x*[0.2126,0.7152,0.0722][i];},0);}
+function heatText(v){if(v==null)return "inherit";var L=heatLum(heatRGB(v)),dk=0.0083;return (1.05/(L+0.05))>=((L+0.05)/(dk+0.05))?"#fff":"#3b1206";}
 var EVT_FROM="11-17",EVT_TO="11-30",EVT_TAG='<span class="evtTag">PlayHorny 登入拿 HCoin 活動起</span>';
 function inEvt(d){return d>=EVT_FROM&&d<=EVT_TO;}
 function renderRet(mode){
